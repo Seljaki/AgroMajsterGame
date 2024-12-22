@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.seljaki.AgroMajsterGame.SeljakiMain;
+import com.seljaki.AgroMajsterGame.http.Plot;
 import com.seljaki.AgroMajsterGame.utils.Constants;
 import com.seljaki.AgroMajsterGame.utils.Geolocation;
 import com.seljaki.AgroMajsterGame.utils.MapRasterTiles;
@@ -39,6 +40,7 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
     private Texture[] mapTiles;
     private ZoomXY beginTile;   // top left tile
     private SeljakiMain game;
+    private Plot[] plots;
 
     // center geolocation
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.557314, 15.637771);
@@ -52,6 +54,8 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
 
     @Override
     public void show() {
+        plots = game.seljakiClient.getPlots();
+
         shapeRenderer = new ShapeRenderer();
 
         camera = new OrthographicCamera();
@@ -192,13 +196,16 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             camera.translate(0, 3, 0);
         }
+        if(Gdx.input.isTouched()) {
+            //new Vector2(Gdx.input.getX(), Gdx.input.getY())
+        }
 
         camera.zoom = MathUtils.clamp(camera.zoom, 0.5f, 2f);
 
         float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
         float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
 
-        camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, Constants.MAP_WIDTH - effectiveViewportWidth / 2f);
-        camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, Constants.MAP_HEIGHT - effectiveViewportHeight / 2f);
+        //camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, Constants.MAP_WIDTH - effectiveViewportWidth / 2f);
+        //camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, Constants.MAP_HEIGHT - effectiveViewportHeight / 2f);
     }
 }
