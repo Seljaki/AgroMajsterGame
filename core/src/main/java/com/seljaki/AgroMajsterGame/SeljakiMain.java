@@ -24,7 +24,7 @@ public class SeljakiMain extends Game {
         viewport = new FitViewport(640, 480);
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         batch = new SpriteBatch();
-        seljakiClient = new SeljakiClient();
+        seljakiClient = SeljakiClient.loadData();
 
         if(seljakiClient.isLoggedIn())
             setScreen(new MapScreen(this));

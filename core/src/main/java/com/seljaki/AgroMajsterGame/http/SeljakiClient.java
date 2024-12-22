@@ -1,12 +1,15 @@
 package com.seljaki.AgroMajsterGame.http;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Json;
 import com.google.gson.Gson;
 import okhttp3.*;
 
 import static com.seljaki.AgroMajsterGame.utils.Constants.SELJAKI_SERVER_URL;
 
 public class SeljakiClient {
-
+    private static final String FILENAME = "userdata.json";
     LoginInfo loginInfo = null;
     public boolean isLoggedIn() {
         return loginInfo != null;
@@ -17,6 +20,25 @@ public class SeljakiClient {
             return null;
 
         return loginInfo.user;
+    }
+
+    public static SeljakiClient loadData() {
+        FileHandle file = Gdx.files.local(FILENAME);
+
+        if(!file.exists())
+            return new SeljakiClient();
+
+        Json json = new Json();
+        String jsonGameData = file.readString();
+        return json.fromJson(SeljakiClient.class, jsonGameData);
+    }
+
+    public void saveData() {
+        FileHandle file = Gdx.files.local(FILENAME);
+
+        Json json = new Json();
+        String jsonGameData = json.toJson(this, SeljakiClient.class);
+        file.writeString(jsonGameData, false);
     }
 
     public boolean logIn(String username, String password) {

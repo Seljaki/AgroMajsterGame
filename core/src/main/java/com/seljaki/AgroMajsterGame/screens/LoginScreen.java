@@ -31,7 +31,6 @@ public class LoginScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-
         stage.act(delta);
         stage.draw();
     }
@@ -58,7 +57,6 @@ public class LoginScreen extends ScreenAdapter {
         Table table = new Table();
         table.defaults().pad(20);
 
-
         TextField usernameInput = new TextField("", skin);
         TextField passwordInput = new TextField("", skin);
         passwordInput.setPasswordMode(true);
@@ -84,6 +82,7 @@ public class LoginScreen extends ScreenAdapter {
                 String password = passwordInput.getText();
 
                 if(game.seljakiClient.logIn(username, password)) {
+                    game.seljakiClient.saveData();
                     game.setScreen(new MapScreen(game));
                 } else {
                     errorLabel.setVisible(true);
