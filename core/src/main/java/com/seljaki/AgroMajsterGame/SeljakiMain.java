@@ -33,6 +33,12 @@ public class SeljakiMain extends Game {
     }
 
     @Override
+    public void render() {
+        ScreenUtils.clear(0.6f, 0.6f, 0.6f, 1f);
+        super.render();
+    }
+
+    @Override
     public void resize(int width, int height) {
         super.resize(width, height);
         viewport.update(width, height);
