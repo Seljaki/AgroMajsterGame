@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.seljaki.AgroMajsterGame.SeljakiMain;
+import com.seljaki.AgroMajsterGame.http.Plot;
 import com.seljaki.AgroMajsterGame.utils.Constants;
 import com.seljaki.AgroMajsterGame.utils.Geolocation;
 import com.seljaki.AgroMajsterGame.utils.MapRasterTiles;
@@ -39,6 +40,7 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
     private Texture[] mapTiles;
     private ZoomXY beginTile;   // top left tile
     private SeljakiMain game;
+    private Plot[] plots;
 
     // center geolocation
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.557314, 15.637771);
@@ -52,6 +54,8 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
 
     @Override
     public void show() {
+        plots = game.seljakiClient.getPlots();
+
         shapeRenderer = new ShapeRenderer();
 
         camera = new OrthographicCamera();

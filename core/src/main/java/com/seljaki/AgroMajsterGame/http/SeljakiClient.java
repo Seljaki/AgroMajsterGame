@@ -4,7 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.seljaki.AgroMajsterGame.utils.Geolocation;
 import okhttp3.*;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.seljaki.AgroMajsterGame.utils.Constants.SELJAKI_SERVER_URL;
 
@@ -50,7 +58,6 @@ public class SeljakiClient {
 
     public boolean logIn(String username, String password) {
         OkHttpClient client = new OkHttpClient();
-        Gson gson = new Gson();
 
         String jsonBody = "{"
             + "\"username\":\"" + username + "\","
@@ -67,6 +74,7 @@ public class SeljakiClient {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful() && response.body() != null) {
+                Gson gson = new Gson();
                 // Parse the JSON response
                 String responseBody = response.body().string();
                 loginInfo = gson.fromJson(responseBody, LoginInfo.class);
@@ -80,6 +88,82 @@ public class SeljakiClient {
             // Handle exceptions such as network issues
             e.printStackTrace();
             return false;
+        }
+    }
+
+    @Nullable
+    public Plot[] getPlots() {
+        if(loginInfo == null) return null;
+
+        OkHttpClient client = new OkHttpClient();
+        Gson gson = new Gson();
+
+        Request request = new Request.Builder()
+            .get()
+            .addHeader("x-auth-token", loginInfo.token)
+            .url(SELJAKI_SERVER_URL+"/plots/geojson")
+            .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                String responseBody = response.body().string();
+
+                JsonObject jsonResponse = gson.fromJson(responseBody, JsonObject.class);
+                JsonArray features = jsonResponse
+                    .getAsJsonObject("plots")
+                    .getAsJsonArray("features");
+
+                // Convert each feature to a Plot object
+                List<Plot> plots = new ArrayList<>();
+                for (JsonElement featureElement : features) {
+                    JsonObject feature = featureElement.getAsJsonObject();
+
+                    // Extract properties
+                    JsonObject properties = feature.getAsJsonObject("properties");
+                    int id = properties.get("id").getAsInt();
+                    String title = properties.get("title").getAsString();
+                    String note = properties.get("note").getAsString();
+                    String plotNumber = properties.get("plotNumber").getAsString();
+                    int cadastralMunicipality = properties.get("cadastralMunicipality").getAsInt();
+                    boolean archived = properties.get("archived").getAsBoolean();
+
+                    // Extract geometry (coordinates)
+                    JsonArray coordinatesArray = feature
+                        .getAsJsonObject("geometry")
+                        .getAsJsonArray("coordinates")
+                        .get(0)
+                        .getAsJsonArray(); // Assuming Polygon with one set of coordinates
+
+                    // Convert coordinates to Geolocation[]
+                    List<Geolocation> coordinates = new ArrayList<>();
+                    for (JsonElement coordinateElement : coordinatesArray) {
+                        JsonArray coordinate = coordinateElement.getAsJsonArray();
+                        double lng = coordinate.get(0).getAsDouble();
+                        double lat = coordinate.get(1).getAsDouble();
+                        coordinates.add(new Geolocation(lat, lng));
+                    }
+
+                    // Create and add Plot to the list
+                    Plot plot = new Plot();
+                    plot.id = id;
+                    plot.title = title;
+                    plot.note = note;
+                    plot.plotNumber = plotNumber;
+                    plot.cadastralMunicipality = cadastralMunicipality;
+                    plot.archived = archived;
+                    plot.coordinates = coordinates.toArray(new Geolocation[0]);
+                    plots.add(plot);
+                }
+
+                return plots.toArray(new Plot[0]);
+            } else {
+                System.err.println("Get failed: " + response.code() + " - " + response.message());
+                return null;
+            }
+        } catch (Exception e) {
+            // Handle exceptions such as network issues
+            e.printStackTrace();
+            return null;
         }
     }
 }
