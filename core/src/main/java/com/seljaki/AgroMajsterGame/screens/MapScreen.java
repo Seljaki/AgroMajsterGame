@@ -2,6 +2,7 @@ package com.seljaki.AgroMajsterGame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,6 +20,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.seljaki.AgroMajsterGame.SeljakiMain;
@@ -45,6 +51,8 @@ public class MapScreen extends ScreenAdapter {
     private Plot[] plots;
     private Polygon[] plotsBounds;
     private Plot selectedPlot;
+    private Stage stage;
+    private Skin skin;
 
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
     private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
@@ -55,6 +63,9 @@ public class MapScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        stage = new Stage(game.viewport);
+        Gdx.input.setInputProcessor(stage);
+        skin = game.skin;
         plots = game.seljakiClient.getPlots();
 
         shapeRenderer = new ShapeRenderer();
@@ -112,6 +123,8 @@ public class MapScreen extends ScreenAdapter {
 
         //drawMarkers();
         drawPlots();
+
+        stage.draw();
     }
 
     private void drawPlots() {
@@ -186,5 +199,49 @@ public class MapScreen extends ScreenAdapter {
 
     void onPlotClicked(Plot plot) {
         selectedPlot = plot;
+        stage.clear();
+        stage.addActor(createPlotInfoWindow(plot));
+    }
+
+    private Window createPlotInfoWindow(Plot plot) {
+        Dialog dialog = new Dialog("Plot Info", skin);
+
+        dialog.row();
+        dialog.add(new Label("Title: " + plot.title, skin)).left().pad(5).row();
+        dialog.add(new Label("Note: " + plot.note, skin)).left().pad(5).row();
+        dialog.add(new Label("Plot Number: " + plot.plotNumber, skin)).left().pad(5).row();
+        dialog.add(new Label("Cadastral Municipality: " + plot.cadastralMunicipality, skin)).left().pad(5).row();
+        dialog.add(new Label("Archived: " + (plot.archived ? "Yes" : "No"), skin)).left().pad(5).row();
+
+        TextButton closeButton = new TextButton("Close", skin);
+        TextButton playGameButton = new TextButton("Play Game", skin);
+
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                selectedPlot = null;
+                dialog.remove();
+            }
+        });
+
+        playGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Play Game clicked!");
+            }
+        });
+
+        Table buttonTable = new Table();
+        buttonTable.add(closeButton).pad(10);
+        buttonTable.add(playGameButton).pad(10);
+        dialog.add(buttonTable).row();
+
+        dialog.pack();
+        dialog.setMovable(true);
+        dialog.setModal(true);
+        dialog.setResizable(false);
+        dialog.setPosition(20, game.viewport.getWorldHeight() - dialog.getHeight() - 20);
+
+        return dialog;
     }
 }
