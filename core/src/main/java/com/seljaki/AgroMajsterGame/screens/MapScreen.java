@@ -2,6 +2,7 @@ package com.seljaki.AgroMajsterGame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,8 +17,14 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.seljaki.AgroMajsterGame.SeljakiMain;
@@ -28,8 +35,9 @@ import com.seljaki.AgroMajsterGame.utils.MapRasterTiles;
 import com.seljaki.AgroMajsterGame.utils.ZoomXY;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-public class MapScreen extends ScreenAdapter implements GestureDetector.GestureListener {
+public class MapScreen extends ScreenAdapter {
     private ShapeRenderer shapeRenderer;
     private Vector3 touchPosition;
 
@@ -41,12 +49,13 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
     private ZoomXY beginTile;   // top left tile
     private SeljakiMain game;
     private Plot[] plots;
+    private Polygon[] plotsBounds;
+    private Plot selectedPlot;
+    private Stage stage;
+    private Skin skin;
 
-    // center geolocation
-    private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.557314, 15.637771);
-
-    // test marker
-    private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.559070, 15.638100);
+    private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
+    private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
 
     public MapScreen(SeljakiMain game) {
         this.game = game;
@@ -54,6 +63,9 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
 
     @Override
     public void show() {
+        stage = new Stage(game.viewport);
+        Gdx.input.setInputProcessor(stage);
+        skin = game.skin;
         plots = game.seljakiClient.getPlots();
 
         shapeRenderer = new ShapeRenderer();
@@ -94,6 +106,8 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
         layers.add(layer);
 
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+
+        plotsBounds = getPlotsBounds();
     }
 
     @Override
@@ -107,74 +121,40 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
 
-        drawMarkers();
+        //drawMarkers();
+        drawPlots();
+
+        stage.draw();
     }
 
-    private void drawMarkers() {
-        Vector2 marker = MapRasterTiles.getPixelPosition(MARKER_GEOLOCATION.lat, MARKER_GEOLOCATION.lng, beginTile.x, beginTile.y);
-
+    private void drawPlots() {
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.circle(marker.x, marker.y, 10);
+        //shapeRenderer.setColor(Color.RED);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        for (Plot p : plots) {
+            if(p == selectedPlot)
+                shapeRenderer.setColor(Color.GREEN);
+            else
+                shapeRenderer.setColor(Color.RED);
+            Geolocation[] loc = p.coordinates;
+            shapeRenderer.polygon(Geolocation.getPolygon(loc, beginTile));
+        }
         shapeRenderer.end();
+    }
+
+    private Polygon[] getPlotsBounds() {
+        ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+        for (Plot p : plots) {
+            Geolocation[] loc = p.coordinates;
+            float[] vertices = Geolocation.getPolygon(loc, beginTile);
+            polygons.add(new Polygon(vertices));
+        }
+        return polygons.toArray(new Polygon[0]);
     }
 
     @Override
     public void dispose() {
         shapeRenderer.dispose();
-    }
-
-    @Override
-    public boolean touchDown(float x, float y, int pointer, int button) {
-        touchPosition.set(x, y, 0);
-        camera.unproject(touchPosition);
-        return false;
-    }
-
-    @Override
-    public boolean tap(float x, float y, int count, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean longPress(float x, float y) {
-        return false;
-    }
-
-    @Override
-    public boolean fling(float velocityX, float velocityY, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean pan(float x, float y, float deltaX, float deltaY) {
-        camera.translate(-deltaX, deltaY);
-        return false;
-    }
-
-    @Override
-    public boolean panStop(float x, float y, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean zoom(float initialDistance, float distance) {
-        if (initialDistance >= distance)
-            camera.zoom += 0.02;
-        else
-            camera.zoom -= 0.02;
-        return false;
-    }
-
-    @Override
-    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-        return false;
-    }
-
-    @Override
-    public void pinchStop() {
-
     }
 
     private void handleInput() {
@@ -196,8 +176,16 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             camera.translate(0, 3, 0);
         }
-        if(Gdx.input.isTouched()) {
-            //new Vector2(Gdx.input.getX(), Gdx.input.getY())
+        if(Gdx.input.justTouched()) {
+            Vector3 point = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            //System.out.println(Gdx.input.getX() +" "+ Gdx.input.getY());
+            for (int i = 0; i < plotsBounds.length; i++) {
+                if(plotsBounds[i].contains(point.x, point.y)) {
+                    System.out.println("CONTAINS " + i);
+                    onPlotClicked(plots[i]);
+                    break;
+                }
+            }
         }
 
         camera.zoom = MathUtils.clamp(camera.zoom, 0.5f, 2f);
@@ -207,5 +195,53 @@ public class MapScreen extends ScreenAdapter implements GestureDetector.GestureL
 
         //camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, Constants.MAP_WIDTH - effectiveViewportWidth / 2f);
         //camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, Constants.MAP_HEIGHT - effectiveViewportHeight / 2f);
+    }
+
+    void onPlotClicked(Plot plot) {
+        selectedPlot = plot;
+        stage.clear();
+        stage.addActor(createPlotInfoWindow(plot));
+    }
+
+    private Window createPlotInfoWindow(Plot plot) {
+        Dialog dialog = new Dialog("Plot Info", skin);
+
+        dialog.row();
+        dialog.add(new Label("Title: " + plot.title, skin)).left().pad(5).row();
+        dialog.add(new Label("Note: " + plot.note, skin)).left().pad(5).row();
+        dialog.add(new Label("Plot Number: " + plot.plotNumber, skin)).left().pad(5).row();
+        dialog.add(new Label("Cadastral Municipality: " + plot.cadastralMunicipality, skin)).left().pad(5).row();
+        dialog.add(new Label("Archived: " + (plot.archived ? "Yes" : "No"), skin)).left().pad(5).row();
+
+        TextButton closeButton = new TextButton("Close", skin);
+        TextButton playGameButton = new TextButton("Play Game", skin);
+
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                selectedPlot = null;
+                dialog.remove();
+            }
+        });
+
+        playGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Play Game clicked!");
+            }
+        });
+
+        Table buttonTable = new Table();
+        buttonTable.add(closeButton).pad(10);
+        buttonTable.add(playGameButton).pad(10);
+        dialog.add(buttonTable).row();
+
+        dialog.pack();
+        dialog.setMovable(true);
+        dialog.setModal(true);
+        dialog.setResizable(false);
+        dialog.setPosition(20, game.viewport.getWorldHeight() - dialog.getHeight() - 20);
+
+        return dialog;
     }
 }
