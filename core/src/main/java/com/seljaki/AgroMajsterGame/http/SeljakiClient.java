@@ -41,6 +41,13 @@ public class SeljakiClient {
         file.writeString(jsonGameData, false);
     }
 
+    public void logOut() {
+        loginInfo = null;
+        FileHandle file = Gdx.files.local(FILENAME);
+        if(file.exists())
+            file.delete();
+    }
+
     public boolean logIn(String username, String password) {
         OkHttpClient client = new OkHttpClient();
         Gson gson = new Gson();
