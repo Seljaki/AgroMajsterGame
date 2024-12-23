@@ -1,9 +1,6 @@
 package com.seljaki.AgroMajsterGame.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -53,6 +50,7 @@ public class MapScreen extends ScreenAdapter {
     private Plot selectedPlot;
     private Stage stage;
     private Skin skin;
+    InputMultiplexer inputMultiplexer;
 
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
     private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
@@ -64,7 +62,6 @@ public class MapScreen extends ScreenAdapter {
     @Override
     public void show() {
         stage = new Stage(game.viewport);
-        Gdx.input.setInputProcessor(stage);
         skin = game.skin;
         plots = game.seljakiClient.getPlots();
 
@@ -108,6 +105,40 @@ public class MapScreen extends ScreenAdapter {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
         plotsBounds = getPlotsBounds();
+
+        inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(new InputAdapter(){
+            @Override
+            public boolean scrolled(float amountX, float amountY) {
+                camera.zoom += amountY * Gdx.graphics.getDeltaTime() * 10f;
+                return true;
+            }
+            private float lastX, lastY;
+            private boolean posSet = false;
+            @Override
+            public boolean touchDragged(int screenX, int screenY, int pointer) {
+                if(posSet) {
+                    float deltaX = (lastX - screenX) * camera.zoom * (camera.viewportWidth / Gdx.graphics.getWidth());
+                    float deltaY = -(lastY - screenY) * camera.zoom * (camera.viewportHeight / Gdx.graphics.getHeight());
+
+                    camera.translate(deltaX, deltaY);
+                }
+
+                lastX = screenX;
+                lastY = screenY;
+                posSet = true;
+                return true;
+            }
+
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                posSet = false;
+                return true;
+            }
+        });
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
@@ -238,7 +269,7 @@ public class MapScreen extends ScreenAdapter {
 
         dialog.pack();
         dialog.setMovable(true);
-        dialog.setModal(true);
+        dialog.setModal(false);
         dialog.setResizable(false);
         dialog.setPosition(20, game.viewport.getWorldHeight() - dialog.getHeight() - 20);
 
