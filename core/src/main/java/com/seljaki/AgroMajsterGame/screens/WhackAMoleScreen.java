@@ -5,12 +5,15 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
@@ -35,6 +38,8 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private float timeRemaining;
     private final float totalTime = 30f;
     private Label finale;
+    Texture mole1Texture;
+    Texture mole2Texture;
 
     public WhackAMoleScreen(SeljakiMain game) {
         this.game = game;
@@ -70,20 +75,31 @@ public class WhackAMoleScreen extends ScreenAdapter {
         skin = game.skin;
         Gdx.input.setInputProcessor(stage);
 
+        Texture frontHillFrontTexture = new Texture(Gdx.files.internal("assets/moleHillFront.png"));
+        Texture frontHillBackTexture = new Texture(Gdx.files.internal("assets/moleHillBack.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("assets/grassyBackground.png"));
+        mole1Texture = new Texture(Gdx.files.internal("assets/mole1.png"));
+        mole2Texture = new Texture(Gdx.files.internal("assets/mole2.png"));
+
+        Image grassyBackground = new Image(backgroundTexture);
+        grassyBackground.setSize(stage.getWidth(), stage.getHeight());
+        grassyBackground.setPosition(0, 0);
+
+        stage.addActor(grassyBackground);
         backgorund = new Table();
         backgorund.setSize(stage.getWidth(), stage.getHeight());
         backgorund.setPosition((stage.getWidth() - stage.getWidth()) / 2,
             (stage.getHeight() - stage.getHeight()) / 2);
-        backgorund.setBackground(skin.getDrawable("window"));
 
         backgroundFront = new Table();
         backgroundFront.setSize(stage.getWidth(), stage.getHeight());
         backgroundFront.setPosition((stage.getWidth() - stage.getWidth()) / 2,
             (stage.getHeight() - stage.getHeight()) / 2 - 10);
 
+
         for (int i = 0; i < 12; i++) {
-            final Image brownSquare = createTempSquare();
-            final Image brownSquareFront = createTempFrontSquare();
+            Image brownSquare = new Image(frontHillBackTexture);
+            Image brownSquareFront = new Image(frontHillFrontTexture);
             squareStateMap.put(brownSquare, false);
             backgorund.add(brownSquare).pad(20).padTop(60);
             backgroundFront.add(brownSquareFront).pad(20).padTop(60);
@@ -111,37 +127,12 @@ public class WhackAMoleScreen extends ScreenAdapter {
         stageFront.addActor(finale);
     }
 
-    private Image createTempSquare() {
-        Pixmap pixmap = new Pixmap(60, 50, Pixmap.Format.RGBA8888);
-        pixmap.setColor(0.5f, 0.2f, 0.1f,1f);
-        pixmap.fill();
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        return new Image(texture);
-    }
-    private Image createTempFrontSquare() {
-        Pixmap pixmap = new Pixmap(60, 50, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.BROWN);
-        pixmap.fill();
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        return new Image(texture);
-    }
-
-    private Image createBlueSquare() {
-        Pixmap pixmap = new Pixmap(30, 50, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.BLUE);
-        pixmap.fill();
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        return new Image(texture);
-    }
-
     private void scheduleBlueSquarePopUp(final Image brownSquare) {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 if (timeRemaining <= 0) {
+                    Gdx.input.setInputProcessor(stageFront);
 
                     if (!finale.isVisible()) {
                         finale.setText("Game Over! Final Score: " + score);
@@ -152,13 +143,13 @@ public class WhackAMoleScreen extends ScreenAdapter {
                     return;
                 }
                 if (!squareStateMap.get(brownSquare) && shouldSpawn()) {
-                    final Image blueSquare = createBlueSquare();
+                    Image blueSquare = new Image(mole1Texture);
                     squareStateMap.put(brownSquare, true);
                     activeSquares++;
 
                     blueSquare.setPosition(
                         brownSquare.getX() + brownSquare.getWidth() / 2 - blueSquare.getWidth() / 2,
-                        brownSquare.getY() + brownSquare.getHeight() / 2 - blueSquare.getHeight() / 2 - 10
+                        brownSquare.getY() + brownSquare.getHeight() / 2 - blueSquare.getHeight() / 2 - 15
                     );
                     stage.addActor(blueSquare);
 
@@ -167,15 +158,14 @@ public class WhackAMoleScreen extends ScreenAdapter {
 
                         @Override
                         public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y, int pointer, int button) {
-                            float clickY = blueSquare.getY() + y;
-                            float topPortionStartY = blueSquare.getY() + blueSquare.getHeight() * 0.50f;
-
-                            if (clickY >= topPortionStartY && !clicked) {
+                            if (!clicked) {
+                                blueSquare.setDrawable(new TextureRegionDrawable(new TextureRegion(mole2Texture)));
                                 clicked = true;
                                 score++;
                                 updateScoreLabel();
                                 blueSquare.addAction(Actions.sequence(
-                                    Actions.moveBy(0, -30, 0.2f),
+                                    Actions.delay(0.2f),
+                                    Actions.moveBy(0, -20, 0.2f),
                                     Actions.run(() -> {
                                         blueSquare.remove();
                                         squareStateMap.put(brownSquare, false);
@@ -189,9 +179,9 @@ public class WhackAMoleScreen extends ScreenAdapter {
 
                     blueSquare.addAction(Actions.sequence(
                         Actions.delay(2),
-                        Actions.moveBy(0, 30, 0.3f),
+                        Actions.moveBy(0, 45, 0.3f),
                         Actions.delay(2),
-                        Actions.moveBy(0, -30, 0.3f),
+                        Actions.moveBy(0, -45, 0.3f),
                         Actions.run(() -> {
                             blueSquare.remove();
                             squareStateMap.put(brownSquare, false);
