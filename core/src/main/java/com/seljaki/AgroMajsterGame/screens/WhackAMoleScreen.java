@@ -33,7 +33,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private Label scoreLabel;
     private Image timerBar;
     private float timeRemaining;
-    private final float totalTime = 5f;
+    private final float totalTime = 30f;
     private Label finale;
 
     public WhackAMoleScreen(SeljakiMain game) {
@@ -79,14 +79,14 @@ public class WhackAMoleScreen extends ScreenAdapter {
         backgroundFront = new Table();
         backgroundFront.setSize(stage.getWidth(), stage.getHeight());
         backgroundFront.setPosition((stage.getWidth() - stage.getWidth()) / 2,
-            (stage.getHeight() - stage.getHeight()) / 2);
+            (stage.getHeight() - stage.getHeight()) / 2 - 10);
 
         for (int i = 0; i < 12; i++) {
             final Image brownSquare = createTempSquare();
             final Image brownSquareFront = createTempFrontSquare();
             squareStateMap.put(brownSquare, false);
-            backgorund.add(brownSquare).pad(20).padTop(70);
-            backgroundFront.add(brownSquareFront).pad(20).padTop(75);
+            backgorund.add(brownSquare).pad(20).padTop(60);
+            backgroundFront.add(brownSquareFront).pad(20).padTop(60);
             if ((i + 1) % 4 == 0) {
                 backgorund.row();
                 backgroundFront.row();
@@ -108,11 +108,11 @@ public class WhackAMoleScreen extends ScreenAdapter {
         stage.addActor(scoreLabel);
         stageFront.addActor(backgroundFront);
         stage.addActor(timerBar);
-        stage.addActor(finale);
+        stageFront.addActor(finale);
     }
 
     private Image createTempSquare() {
-        Pixmap pixmap = new Pixmap(60, 30, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(60, 50, Pixmap.Format.RGBA8888);
         pixmap.setColor(0.5f, 0.2f, 0.1f,1f);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
@@ -120,7 +120,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
         return new Image(texture);
     }
     private Image createTempFrontSquare() {
-        Pixmap pixmap = new Pixmap(60, 25, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(60, 50, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.BROWN);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
@@ -158,7 +158,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
 
                     blueSquare.setPosition(
                         brownSquare.getX() + brownSquare.getWidth() / 2 - blueSquare.getWidth() / 2,
-                        brownSquare.getY() + brownSquare.getHeight() / 2 - blueSquare.getHeight() / 2 - 15
+                        brownSquare.getY() + brownSquare.getHeight() / 2 - blueSquare.getHeight() / 2 - 10
                     );
                     stage.addActor(blueSquare);
 
