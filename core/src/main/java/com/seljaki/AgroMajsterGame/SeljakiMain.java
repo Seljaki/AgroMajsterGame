@@ -2,8 +2,10 @@ package com.seljaki.AgroMajsterGame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.seljaki.AgroMajsterGame.http.SeljakiClient;
 import com.seljaki.AgroMajsterGame.screens.LoginScreen;
 import com.seljaki.AgroMajsterGame.screens.MapScreen;
+import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 
 public class SeljakiMain extends Game {
     public Skin skin;
@@ -19,10 +22,19 @@ public class SeljakiMain extends Game {
     public Batch batch;
     public SeljakiClient seljakiClient;
 
+    private AssetManager assetManager;
+    public TextureAtlas gameplayAtlas;
+
     @Override
     public void create() {
         viewport = new FitViewport(640, 480);
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        assetManager = new AssetManager();
+        assetManager.load(AssetDescriptors.GAMEPLAY);
+        assetManager.load(AssetDescriptors.SKIN);
+        assetManager.finishLoading();
+
+        gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
+        skin = assetManager.get(AssetDescriptors.SKIN);
         batch = new SpriteBatch();
         seljakiClient = SeljakiClient.loadData();
 
@@ -49,5 +61,6 @@ public class SeljakiMain extends Game {
         super.dispose();
         batch.dispose();
         skin.dispose();
+        gameplayAtlas.dispose();
     }
 }

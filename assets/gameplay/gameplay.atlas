@@ -1,0 +1,41 @@
+
+gameplay.png
+size: 1024, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+grassyBackground
+  rotate: false
+  xy: 2, 2
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
+mole1
+  rotate: false
+  xy: 706, 445
+  size: 30, 37
+  orig: 30, 37
+  offset: 0, 0
+  index: -1
+mole2
+  rotate: false
+  xy: 644, 341
+  size: 30, 37
+  orig: 30, 37
+  offset: 0, 0
+  index: -1
+molehillBack
+  rotate: false
+  xy: 644, 432
+  size: 60, 50
+  orig: 60, 50
+  offset: 0, 0
+  index: -1
+molehillFront
+  rotate: false
+  xy: 644, 380
+  size: 60, 50
+  orig: 60, 50
+  offset: 0, 0
+  index: -1

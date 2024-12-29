@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
+import com.seljaki.AgroMajsterGame.assets.RegionNames;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,12 +37,12 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private Label scoreLabel;
     private Image timerBar;
     private float timeRemaining;
-    private final float totalTime = 1f;
-    private boolean gameFinished = false;
-    Texture mole1Texture;
-    Texture mole2Texture;
+    private final float totalTime = 5f;
+    TextureRegion mole1Texture;
+    TextureRegion mole2Texture;
 
     private Table resultTable;
+    private TextureAtlas gameplayAtlas;
 
     public WhackAMoleScreen(SeljakiMain game) {
         this.game = game;
@@ -80,13 +82,15 @@ public class WhackAMoleScreen extends ScreenAdapter {
         stageFront = new Stage(game.viewport);
         stageScore = new Stage(game.viewport);
         skin = game.skin;
+        gameplayAtlas = game.gameplayAtlas;
         Gdx.input.setInputProcessor(stage);
 
-        Texture frontHillFrontTexture = new Texture(Gdx.files.internal("assets/moleHillFront.png"));
-        Texture frontHillBackTexture = new Texture(Gdx.files.internal("assets/moleHillBack.png"));
-        Texture backgroundTexture = new Texture(Gdx.files.internal("assets/grassyBackground.png"));
-        mole1Texture = new Texture(Gdx.files.internal("assets/mole1.png"));
-        mole2Texture = new Texture(Gdx.files.internal("assets/mole2.png"));
+
+        TextureRegion frontHillTexture = gameplayAtlas.findRegion(RegionNames.MOLEHILL_FRONT);
+        TextureRegion backHillTexture = gameplayAtlas.findRegion(RegionNames.MOLEHILL_BACK);
+        TextureRegion backgroundTexture = gameplayAtlas.findRegion(RegionNames.GRASSY_BACKGROUND);
+        mole1Texture = gameplayAtlas.findRegion(RegionNames.MOLE1);
+        mole2Texture = gameplayAtlas.findRegion(RegionNames.MOLE2);
 
         Image grassyBackground = new Image(backgroundTexture);
         grassyBackground.setSize(stage.getWidth(), stage.getHeight());
@@ -105,17 +109,17 @@ public class WhackAMoleScreen extends ScreenAdapter {
 
 
         for (int i = 0; i < 12; i++) {
-            Image brownSquare = new Image(frontHillBackTexture);
-            Image brownSquareFront = new Image(frontHillFrontTexture);
-            moleHillStateMap.put(brownSquare, false);
-            background.add(brownSquare).pad(20).padTop(60);
-            backgroundFront.add(brownSquareFront).pad(20).padTop(60);
+            Image molehillBack = new Image(backHillTexture);
+            Image molehillFront = new Image(frontHillTexture);
+            moleHillStateMap.put(molehillBack, false);
+            background.add(molehillBack).pad(20).padTop(60);
+            backgroundFront.add(molehillFront).pad(20).padTop(60);
             if ((i + 1) % 4 == 0) {
                 background.row();
                 backgroundFront.row();
             }
 
-            scheduleBlueSquarePopUp(brownSquare);
+            scheduleMolePopUp(molehillBack);
         }
 
         scoreLabel = new Label("Score: " + score, skin);
@@ -129,42 +133,43 @@ public class WhackAMoleScreen extends ScreenAdapter {
         stage.addActor(timerBar);
     }
 
-    private void scheduleBlueSquarePopUp(final Image brownSquare) {
+    private void scheduleMolePopUp(final Image molehillBack) {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (timeRemaining <= 0 && !gameFinished) {
+                if (timeRemaining <= 0) {
                     showResultTable();
-                    gameFinished = true;
+                    cancel();
                     return;
                 }
-                if (!moleHillStateMap.get(brownSquare) && shouldSpawn()) {
-                    Image blueSquare = new Image(mole1Texture);
-                    moleHillStateMap.put(brownSquare, true);
+                if (!moleHillStateMap.get(molehillBack) && shouldSpawn()) {
+                    Image mole = new Image(mole1Texture);
+                    moleHillStateMap.put(molehillBack, true);
                     activeMoles++;
 
-                    blueSquare.setPosition(
-                        brownSquare.getX() + brownSquare.getWidth() / 2 - blueSquare.getWidth() / 2,
-                        brownSquare.getY() + brownSquare.getHeight() / 2 - blueSquare.getHeight() / 2 - 15
+                    mole.setPosition(
+                        molehillBack.getX() + molehillBack.getWidth() / 2 - mole.getWidth() / 2,
+                        molehillBack.getY() + molehillBack.getHeight() / 2 - mole.getHeight() / 2 - 15
                     );
-                    stage.addActor(blueSquare);
+                    stage.addActor(mole);
 
-                    blueSquare.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+                    mole.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
                         private boolean clicked = false;
 
                         @Override
                         public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y, int pointer, int button) {
                             if (!clicked) {
-                                blueSquare.setDrawable(new TextureRegionDrawable(new TextureRegion(mole2Texture)));
+                                mole.setDrawable(new TextureRegionDrawable(new TextureRegion(mole2Texture)));
                                 clicked = true;
                                 score++;
                                 updateScoreLabel();
-                                blueSquare.addAction(Actions.sequence(
+                                mole.clearActions();
+                                mole.addAction(Actions.sequence(
                                     Actions.delay(0.2f),
-                                    Actions.moveBy(0, -20, 0.2f),
+                                    Actions.moveBy(0, -30, 0.1f),
                                     Actions.run(() -> {
-                                        blueSquare.remove();
-                                        moleHillStateMap.put(brownSquare, false);
+                                        mole.remove();
+                                        moleHillStateMap.put(molehillBack, false);
                                         activeMoles--;
                                     })
                                 ));
@@ -173,14 +178,14 @@ public class WhackAMoleScreen extends ScreenAdapter {
                         }
                     });
 
-                    blueSquare.addAction(Actions.sequence(
+                    mole.addAction(Actions.sequence(
                         Actions.delay(2),
                         Actions.moveBy(0, 45, 0.3f),
                         Actions.delay(2),
                         Actions.moveBy(0, -45, 0.3f),
                         Actions.run(() -> {
-                            blueSquare.remove();
-                            moleHillStateMap.put(brownSquare, false);
+                            mole.remove();
+                            moleHillStateMap.put(molehillBack, false);
                             activeMoles--;
                         })
                     ));
@@ -264,8 +269,5 @@ public class WhackAMoleScreen extends ScreenAdapter {
         stage.dispose();
         stageFront.dispose();
         stageScore.dispose();
-
-        mole1Texture.dispose();
-        mole2Texture.dispose();
     }
 }
