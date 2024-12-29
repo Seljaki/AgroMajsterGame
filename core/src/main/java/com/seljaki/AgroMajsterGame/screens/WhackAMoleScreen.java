@@ -35,7 +35,8 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private Label scoreLabel;
     private Image timerBar;
     private float timeRemaining;
-    private final float totalTime = 30f;
+    private final float totalTime = 1f;
+    private boolean gameFinished = false;
     Texture mole1Texture;
     Texture mole2Texture;
 
@@ -52,6 +53,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        super.render(delta);
         ScreenUtils.clear(0f, 0f, 0f, 1f);
         stage.act(delta);
         stage.draw();
@@ -66,6 +68,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
+        super.resize(width, height);
         stage.getViewport().update(width, height);
         stageFront.getViewport().update(width, height);
         stageScore.getViewport().update(width, height);
@@ -130,8 +133,9 @@ public class WhackAMoleScreen extends ScreenAdapter {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (timeRemaining <= 0) {
+                if (timeRemaining <= 0 && !gameFinished) {
                     showResultTable();
+                    gameFinished = true;
                     return;
                 }
                 if (!moleHillStateMap.get(brownSquare) && shouldSpawn()) {
