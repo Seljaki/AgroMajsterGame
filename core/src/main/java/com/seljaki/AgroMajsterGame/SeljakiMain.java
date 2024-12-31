@@ -2,6 +2,7 @@ package com.seljaki.AgroMajsterGame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,14 +19,20 @@ public class SeljakiMain extends Game {
     public Viewport viewport;
     public Batch batch;
     public SeljakiClient seljakiClient;
+    private AssetManager assetManager;
+
+    public AssetManager getAssetManager() {
+        return assetManager;
+    }
 
     @Override
     public void create() {
         viewport = new FitViewport(640, 480);
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+
         batch = new SpriteBatch();
         seljakiClient = SeljakiClient.loadData();
-
+        assetManager = new AssetManager();
         if(seljakiClient.isLoggedIn())
             setScreen(new MapScreen(this));
         else

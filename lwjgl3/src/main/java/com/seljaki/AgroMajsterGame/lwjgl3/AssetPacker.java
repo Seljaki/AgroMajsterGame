@@ -11,6 +11,8 @@ public class AssetPacker {
 
     public static void main(String[] args) {
         TexturePacker.Settings settings = new TexturePacker.Settings();
+        settings.maxWidth = 8192;  // Povečaj na 8192, če je potrebno
+        settings.maxHeight = 8192;
         settings.debug = DRAW_DEBUG_OUTLINE;
 
         TexturePacker.process(settings,
