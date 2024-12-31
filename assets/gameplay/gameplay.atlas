@@ -11,7 +11,7 @@ crosshair
   orig: 512, 512
   offset: 0, 0
   index: -1
-duckMagpieGameBg
+duckMagpieGameBackGround
   rotate: false
   xy: 2, 804
   size: 5230, 2868

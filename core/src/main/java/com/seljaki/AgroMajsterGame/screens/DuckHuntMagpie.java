@@ -15,6 +15,7 @@ import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.AssetPaths;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
+import org.w3c.dom.Text;
 
 import java.util.Random;
 
@@ -23,6 +24,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private Skin skin;
     private AssetManager assetManager;
     private TextureAtlas gameplayAtlas;
+    TextureRegion backgroundRegion;
 
     // Referenca na glavno igro
     private SeljakiMain game;
@@ -56,6 +58,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         assetManager = game.getAssetManager();
         assetManager.load(AssetDescriptors.UI_SKIN);
         assetManager.load(AssetDescriptors.GAMEPLAY);
+        //assetManager.load(AssetDescriptors.DUCK_MAGPIE_BACKGROUND);
         assetManager.finishLoading();
         this.skin = assetManager.get(AssetPaths.UI_SKIN);
     }
@@ -65,7 +68,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         // Ustvari batch (če še nisi)
         batch = new SpriteBatch();
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
-
+        backgroundRegion = gameplayAtlas.findRegion(RegionNames.DUCK_MAGPIE_BACKGROUND);
         // Nastavimo začetne dimenzije
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
@@ -86,7 +89,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         respawnMagpie();
 
         // Naložimo teksturo za crosshair
-        TextureRegion crosshairRegion = gameplayAtlas.findRegion(RegionNames.CROSSHAIR);
+        TextureRegion crosshairRegion = gameplayAtlas.findRegion(RegionNames.MAGPIE_SPRITE_1);
         crosshairTexture = crosshairRegion.getTexture();
 
         // Skrij sistemski kazalec
@@ -126,13 +129,16 @@ public class DuckHuntMagpie extends ScreenAdapter {
 
         // 5) Izrišemo vse
         batch.begin();
-
+        batch.draw(backgroundRegion,
+            0, 0,
+            screenWidth, screenHeight);
         // Izrišemo srako
         TextureRegion currentFrame = magpieAnimation.getKeyFrame(animationTimer);
         batch.draw(currentFrame, magpieX, magpieY);
 
         // Izrišemo crosshair
-        batch.draw(crosshairTexture, crosshairX, crosshairY);
+        TextureRegion ch = new TextureRegion(gameplayAtlas.findRegion(RegionNames.CROSSHAIR));
+        batch.draw(ch.getTexture(), crosshairX, crosshairY);
 
         // Izrišemo score in ammo (zelo preprosto, brez Scene2D UI)
         skin.getFont("default").draw(batch, "Score: " + score, 10, screenHeight - 10);
