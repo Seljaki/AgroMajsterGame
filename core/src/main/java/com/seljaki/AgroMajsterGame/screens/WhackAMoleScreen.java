@@ -37,7 +37,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private Label scoreLabel;
     private Image timerBar;
     private float timeRemaining;
-    private final float totalTime = 5f;
+    private final float totalTime = 30f;
     TextureRegion mole1Texture;
     TextureRegion mole2Texture;
 
