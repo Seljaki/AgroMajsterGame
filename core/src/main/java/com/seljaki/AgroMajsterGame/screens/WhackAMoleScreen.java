@@ -2,6 +2,9 @@ package com.seljaki.AgroMajsterGame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,15 +26,13 @@ import java.util.Map;
 import java.util.Random;
 
 public class WhackAMoleScreen extends ScreenAdapter {
-    private SeljakiMain game;
+    private final SeljakiMain game;
     private Stage stage;
     private Stage stageFront;
     private Stage stageScore;
-    private Skin skin;
-    private Table background;
-    private Table backgroundFront;
-    private Random random;
-    private Map<Image, Boolean> moleHillStateMap;
+    private final Skin skin;
+    private final Random random;
+    private final Map<Image, Boolean> moleHillStateMap;
     private int activeMoles;
     private int score;
     private Label scoreLabel;
@@ -42,7 +43,9 @@ public class WhackAMoleScreen extends ScreenAdapter {
     TextureRegion mole2Texture;
 
     private Table resultTable;
-    private TextureAtlas gameplayAtlas;
+    private final TextureAtlas gameplayAtlas;
+    private final Sound moleSqueak;
+    private final Music gameMusic;
 
     public WhackAMoleScreen(SeljakiMain game) {
         this.game = game;
@@ -51,6 +54,12 @@ public class WhackAMoleScreen extends ScreenAdapter {
         this.activeMoles = 0;
         this.score = 0;
         this.timeRemaining = totalTime;
+
+        skin = game.skin;
+        gameplayAtlas = game.gameplayAtlas;
+        moleSqueak = game.moleSqueak;
+        gameMusic = game.whackAMoleMusic;
+        gameMusic.setLooping(true);
     }
 
     @Override
@@ -78,11 +87,10 @@ public class WhackAMoleScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        if (!gameMusic.isPlaying()) gameMusic.play();
         stage = new Stage(game.viewport);
         stageFront = new Stage(game.viewport);
         stageScore = new Stage(game.viewport);
-        skin = game.skin;
-        gameplayAtlas = game.gameplayAtlas;
         Gdx.input.setInputProcessor(stage);
 
 
@@ -97,12 +105,12 @@ public class WhackAMoleScreen extends ScreenAdapter {
         grassyBackground.setPosition(0, 0);
 
         stage.addActor(grassyBackground);
-        background = new Table();
+        Table background = new Table();
         background.setSize(stage.getWidth(), stage.getHeight());
         background.setPosition((stage.getWidth() - stage.getWidth()) / 2,
             (stage.getHeight() - stage.getHeight()) / 2);
 
-        backgroundFront = new Table();
+        Table backgroundFront = new Table();
         backgroundFront.setSize(stage.getWidth(), stage.getHeight());
         backgroundFront.setPosition((stage.getWidth() - stage.getWidth()) / 2,
             (stage.getHeight() - stage.getHeight()) / 2 - 10);
@@ -125,10 +133,14 @@ public class WhackAMoleScreen extends ScreenAdapter {
         scoreLabel = new Label("Score: " + score, skin);
         scoreLabel.setPosition(stage.getWidth() / 2 - scoreLabel.getWidth() / 2, stage.getHeight() - 50);
         timerBar = createTimerBar();
-        timerBar.setPosition(0, 10);
+
+        Label timeLabel = new Label("Time: ", skin);
+        timeLabel.setPosition(5,20);
+        timerBar.setPosition(0, 0);
 
         stage.addActor(background);
         stage.addActor(scoreLabel);
+        stage.addActor(timeLabel);
         stageFront.addActor(backgroundFront);
         stage.addActor(timerBar);
     }
@@ -164,6 +176,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
                                 score++;
                                 updateScoreLabel();
                                 mole.clearActions();
+                                moleSqueak.play();
                                 mole.addAction(Actions.sequence(
                                     Actions.delay(0.2f),
                                     Actions.moveBy(0, -30, 0.1f),
@@ -208,13 +221,13 @@ public class WhackAMoleScreen extends ScreenAdapter {
     }
 
     private Image createTimerBar() {
-        Pixmap pixmap = new Pixmap(1, 30, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.RED);
+        Pixmap pixmap = new Pixmap(1, 20, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.ORANGE);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
         Image bar = new Image(texture);
-        bar.setSize(stage.getWidth(), 30);
+        bar.setSize(stage.getWidth(), 20);
         return bar;
     }
 
@@ -250,6 +263,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 resultTable.remove();
+                gameMusic.stop();
                 game.setScreen(new MapScreen(game));
             }
         });
@@ -257,6 +271,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 resultTable.remove();
+                gameMusic.stop();
                 dispose();
                 game.setScreen(new WhackAMoleScreen(game));
             }
@@ -269,5 +284,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
         stage.dispose();
         stageFront.dispose();
         stageScore.dispose();
+        gameMusic.dispose();
+        moleSqueak.dispose();
     }
 }
