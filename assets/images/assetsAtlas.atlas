@@ -6,105 +6,189 @@ filter: Nearest, Nearest
 repeat: none
 crosshair
   rotate: false
-  xy: 7331, 3160
+  xy: 5234, 1285
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 duckMagpieGameBg
   rotate: false
-  xy: 2, 804
+  xy: 2, 1056
   size: 5230, 2868
   orig: 5230, 2868
   offset: 0, 0
   index: -1
-magpieSprite1
+magpieSpriteLeft1
+  rotate: false
+  xy: 5234, 2853
+  size: 626, 544
+  orig: 626, 544
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft10
+  rotate: false
+  xy: 7184, 3485
+  size: 624, 439
+  orig: 624, 439
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft11
+  rotate: false
+  xy: 2, 529
+  size: 697, 525
+  orig: 697, 525
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft12
+  rotate: false
+  xy: 5234, 3399
+  size: 697, 525
+  orig: 697, 525
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft2
+  rotate: false
+  xy: 4514, 679
+  size: 625, 375
+  orig: 625, 375
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft3
+  rotate: false
+  xy: 5234, 943
+  size: 626, 340
+  orig: 626, 340
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft4
+  rotate: false
+  xy: 5933, 3421
+  size: 628, 503
+  orig: 628, 503
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft5
+  rotate: false
+  xy: 6563, 3429
+  size: 619, 495
+  orig: 619, 495
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft6
+  rotate: false
+  xy: 1400, 548
+  size: 621, 506
+  orig: 621, 506
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft7
+  rotate: false
+  xy: 3270, 658
+  size: 620, 396
+  orig: 620, 396
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft8
+  rotate: false
+  xy: 5769, 568
+  size: 621, 338
+  orig: 621, 338
+  offset: 0, 0
+  index: -1
+magpieSpriteLeft9
+  rotate: false
+  xy: 2644, 290
+  size: 616, 323
+  orig: 616, 323
+  offset: 0, 0
+  index: -1
+magpieSpriteRight1
+  rotate: false
+  xy: 5234, 2307
+  size: 626, 544
+  orig: 626, 544
+  offset: 0, 0
+  index: -1
+magpieSpriteRight10
+  rotate: false
+  xy: 2644, 615
+  size: 624, 439
+  orig: 624, 439
+  offset: 0, 0
+  index: -1
+magpieSpriteRight11
   rotate: false
   xy: 2, 2
-  size: 697, 800
-  orig: 697, 800
+  size: 697, 525
+  orig: 697, 525
   offset: 0, 0
   index: -1
-magpieSprite10
+magpieSpriteRight12
   rotate: false
-  xy: 2099, 2
-  size: 697, 800
-  orig: 697, 800
+  xy: 701, 529
+  size: 697, 525
+  orig: 697, 525
   offset: 0, 0
   index: -1
-magpieSprite11
+magpieSpriteRight2
   rotate: false
-  xy: 5933, 1268
-  size: 697, 800
-  orig: 697, 800
+  xy: 5862, 908
+  size: 625, 375
+  orig: 625, 375
   offset: 0, 0
   index: -1
-magpieSprite12
+magpieSpriteRight3
   rotate: false
-  xy: 6632, 2070
-  size: 697, 800
-  orig: 697, 800
+  xy: 5141, 601
+  size: 626, 340
+  orig: 626, 340
   offset: 0, 0
   index: -1
-magpieSprite2
+magpieSpriteRight4
   rotate: false
-  xy: 5234, 2872
-  size: 697, 800
-  orig: 697, 800
+  xy: 701, 24
+  size: 628, 503
+  orig: 628, 503
   offset: 0, 0
   index: -1
-magpieSprite3
+magpieSpriteRight5
   rotate: false
-  xy: 701, 2
-  size: 697, 800
-  orig: 697, 800
+  xy: 2023, 559
+  size: 619, 495
+  orig: 619, 495
   offset: 0, 0
   index: -1
-magpieSprite4
+magpieSpriteRight6
   rotate: false
-  xy: 5234, 2070
-  size: 697, 800
-  orig: 697, 800
+  xy: 5234, 1799
+  size: 621, 506
+  orig: 621, 506
   offset: 0, 0
   index: -1
-magpieSprite5
+magpieSpriteRight7
   rotate: false
-  xy: 5933, 2872
-  size: 697, 800
-  orig: 697, 800
+  xy: 3892, 658
+  size: 620, 396
+  orig: 620, 396
   offset: 0, 0
   index: -1
-magpieSprite6
+magpieSpriteRight8
   rotate: false
-  xy: 1400, 2
-  size: 697, 800
-  orig: 697, 800
+  xy: 7184, 3145
+  size: 621, 338
+  orig: 621, 338
   offset: 0, 0
   index: -1
-magpieSprite7
+magpieSpriteRight9
   rotate: false
-  xy: 5234, 1268
-  size: 697, 800
-  orig: 697, 800
-  offset: 0, 0
-  index: -1
-magpieSprite8
-  rotate: false
-  xy: 5933, 2070
-  size: 697, 800
-  orig: 697, 800
-  offset: 0, 0
-  index: -1
-magpieSprite9
-  rotate: false
-  xy: 6632, 2872
-  size: 697, 800
-  orig: 697, 800
+  xy: 3270, 333
+  size: 616, 323
+  orig: 616, 323
   offset: 0, 0
   index: -1
 scope
   rotate: false
-  xy: 2798, 290
+  xy: 5748, 1285
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
