@@ -24,7 +24,10 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private Skin skin;
     private AssetManager assetManager;
     private TextureAtlas gameplayAtlas;
-    TextureRegion backgroundRegion;
+
+    private TextureRegion crosshairRegion;
+    private float scopeWidth, scopeHeight;
+    private float scopeScale = 0.15f; // prilagodi po želji
 
     // Referenca na glavno igro
     private SeljakiMain game;
@@ -42,7 +45,6 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private Random random;
 
     // Crosshair namesto miške
-    private Texture crosshairTexture;
     private float crosshairX, crosshairY;
 
     // Logika za streljanje
@@ -65,17 +67,12 @@ public class DuckHuntMagpie extends ScreenAdapter {
 
     @Override
     public void show() {
-        // Ustvari batch (če še nisi)
         batch = new SpriteBatch();
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
-        backgroundRegion = gameplayAtlas.findRegion(RegionNames.DUCK_MAGPIE_BACKGROUND);
-        // Nastavimo začetne dimenzije
+
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
 
-        // Ustvari animacijo srake
-        // Recimo, da imamo datoteke sraka1.png ... sraka12.png v assets/
-        // Če imaš TextureAtlas, lahko podobno pridobiš regije iz Atlasa.
         Array<TextureRegion> frames = new Array<>();
         for (String magpieSpriteName : RegionNames.MAGPIE_SPRITES) {
             TextureRegion tex = gameplayAtlas.findRegion(magpieSpriteName);
@@ -89,15 +86,16 @@ public class DuckHuntMagpie extends ScreenAdapter {
         respawnMagpie();
 
         // Naložimo teksturo za crosshair
-        TextureRegion crosshairRegion = gameplayAtlas.findRegion(RegionNames.MAGPIE_SPRITE_1);
-        crosshairTexture = crosshairRegion.getTexture();
+        crosshairRegion = gameplayAtlas.findRegion(RegionNames.SCOPE);
+        scopeWidth = crosshairRegion.getRegionWidth() * scopeScale;
+        scopeHeight = crosshairRegion.getRegionHeight() * scopeScale;
 
         // Skrij sistemski kazalec
         Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.None);
 
         // Postavimo crosshair na sredino
-        crosshairX = screenWidth / 2f - crosshairTexture.getWidth() / 2f;
-        crosshairY = screenHeight / 2f - crosshairTexture.getHeight() / 2f;
+        crosshairX = Gdx.input.getX() - scopeWidth / 2f;
+        crosshairY = (screenHeight - Gdx.input.getY()) - scopeHeight / 2f;
     }
 
     @Override
@@ -118,32 +116,34 @@ public class DuckHuntMagpie extends ScreenAdapter {
             respawnMagpie();
         }
 
-        // 3) Posodobimo položaj crosshaira glede na miško
-        // Ker smo skriti sistemski kazalec, lahko enostavno beremo Gdx.input.getX/Y
-        // in obrnemo Y, da ustreza koordinatnemu sistemu od spodaj navzgor
-        crosshairX = Gdx.input.getX() - crosshairTexture.getWidth() / 2f;
-        crosshairY = (screenHeight - Gdx.input.getY()) - crosshairTexture.getHeight() / 2f;
+        crosshairX = Gdx.input.getX() - scopeWidth / 2f;
+        crosshairY = (screenHeight - Gdx.input.getY()) - scopeHeight / 2f;
 
         // 4) Preverimo input za streljanje
         handleInput();
 
         // 5) Izrišemo vse
         batch.begin();
-        batch.draw(backgroundRegion,
+        batch.draw(gameplayAtlas.findRegion(RegionNames.BG_DG),
             0, 0,
             screenWidth, screenHeight);
         // Izrišemo srako
         TextureRegion currentFrame = magpieAnimation.getKeyFrame(animationTimer);
         batch.draw(currentFrame, magpieX, magpieY);
 
-        // Izrišemo crosshair
-        TextureRegion ch = new TextureRegion(gameplayAtlas.findRegion(RegionNames.CROSSHAIR));
-        batch.draw(ch.getTexture(), crosshairX, crosshairY);
+        float scale = 0.15f; // 50 % velikost
 
-        // Izrišemo score in ammo (zelo preprosto, brez Scene2D UI)
-        skin.getFont("default").draw(batch, "Score: " + score, 10, screenHeight - 10);
-        skin.getFont("default").draw(batch, "Ammo: " + ammo, 10, screenHeight - 30);
-        skin.getFont("default").draw(batch, "[R] za reload", 10, screenHeight - 50);
+        batch.draw(
+            crosshairRegion,
+            crosshairX,        // x (levega spodnjega kota izrisa)
+            crosshairY,        // y (levega spodnjega kota izrisa)
+            scopeWidth,
+            scopeHeight
+        );
+
+        skin.getFont("window").draw(batch, "Score: " + score, 10, screenHeight - 10);
+        skin.getFont("window").draw(batch, "Ammo: " + ammo, 10, screenHeight - 30);
+        skin.getFont("window").draw(batch, "[R] za reload", 10, screenHeight - 50);
 
         batch.end();
     }
@@ -176,10 +176,10 @@ public class DuckHuntMagpie extends ScreenAdapter {
         float frameHeight = frame.getRegionHeight();
 
         // Prilagodimo, da je "klik" nekje znotraj srake
-        if (crosshairX + crosshairTexture.getWidth() / 2f >= magpieX &&
-            crosshairX + crosshairTexture.getWidth() / 2f <= magpieX + frameWidth &&
-            crosshairY + crosshairTexture.getHeight() / 2f >= magpieY &&
-            crosshairY + crosshairTexture.getHeight() / 2f <= magpieY + frameHeight) {
+        if (crosshairX + crosshairRegion.getTexture().getWidth() / 2f >= magpieX &&
+            crosshairX + crosshairRegion.getTexture().getWidth() / 2f <= magpieX + frameWidth &&
+            crosshairY + crosshairRegion.getTexture().getHeight() / 2f >= magpieY &&
+            crosshairY + crosshairRegion.getTexture().getHeight() / 2f <= magpieY + frameHeight) {
             return true;
         }
         return false;
@@ -202,7 +202,6 @@ public class DuckHuntMagpie extends ScreenAdapter {
     public void dispose() {
         // Sprosti vire
         batch.dispose();
-        crosshairTexture.dispose();
         for (TextureRegion reg : magpieAnimation.getKeyFrames()) {
             reg.getTexture().dispose();
         }

@@ -4,8 +4,9 @@ public class RegionNames {
 
     // gameplay.atlas
     public static final String EXAMPLE = "example";
-    public static final String DUCK_MAGPIE_BACKGROUND = "duckMagpieGameBackGround";
+    public static final String BG_DG = "duckMagpieGameBg";
     public static final String CROSSHAIR = "crosshair";
+    public static final String SCOPE = "scope";
     public static final String MAGPIE_SPRITE_1 = "magpieSprite1";
     public static final String MAGPIE_SPRITE_2 = "magpieSprite2";
     public static final String MAGPIE_SPRITE_3 = "magpieSprite3";
