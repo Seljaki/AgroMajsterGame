@@ -129,6 +129,9 @@ public class MapScreen extends ScreenAdapter {
                     cameraVelocity.x = 0;
                     cameraVelocity.y = 0;
                     camera.translate(deltaX, deltaY);
+                } else {
+                    deltaX = 0;
+                    deltaY = 0;
                 }
 
                 lastX = screenX;
@@ -141,8 +144,12 @@ public class MapScreen extends ScreenAdapter {
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 posSet = false;
 
-                cameraVelocity.x = deltaX;
-                cameraVelocity.y = deltaY;
+
+                if (Math.abs(deltaX) >= 2)
+                    cameraVelocity.x = deltaX;
+                if (Math.abs(deltaY) >= 2)
+                    cameraVelocity.y = deltaY;
+                System.out.println(cameraVelocity);
 
                 return true;
             }
@@ -158,8 +165,8 @@ public class MapScreen extends ScreenAdapter {
 
 
         camera.translate(cameraVelocity);
-        cameraVelocity.x *= 0.75f;
-        cameraVelocity.y *= 0.75f;
+        cameraVelocity.x = MathUtils.lerp(cameraVelocity.x, 0, 0.05f); // Adjust 0.1f for smoothing factor
+        cameraVelocity.y = MathUtils.lerp(cameraVelocity.y, 0, 0.05F);
         camera.update();
 
         tiledMapRenderer.setView(camera);
