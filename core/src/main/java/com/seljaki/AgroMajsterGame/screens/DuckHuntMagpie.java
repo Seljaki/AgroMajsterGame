@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -27,6 +28,8 @@ public class DuckHuntMagpie extends ScreenAdapter {
 
     private TextureRegion crosshairRegion;
     private float scopeWidth, scopeHeight;
+    private Sound gunShot;
+    private Sound emptyGunShot;
     private float scopeScale = 0.15f; // prilagodi po želji
 
     // Referenca na glavno igro
@@ -60,9 +63,13 @@ public class DuckHuntMagpie extends ScreenAdapter {
         assetManager = game.getAssetManager();
         assetManager.load(AssetDescriptors.UI_SKIN);
         assetManager.load(AssetDescriptors.GAMEPLAY);
+        assetManager.load(AssetDescriptors.EMPTY_GUN_SHOT);
+        assetManager.load(AssetDescriptors.GUN_SHOT);
         //assetManager.load(AssetDescriptors.DUCK_MAGPIE_BACKGROUND);
         assetManager.finishLoading();
         this.skin = assetManager.get(AssetPaths.UI_SKIN);
+        gunShot = assetManager.get(AssetDescriptors.GUN_SHOT);
+        emptyGunShot = assetManager.get(AssetDescriptors.EMPTY_GUN_SHOT);
     }
 
     @Override
@@ -153,6 +160,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             if (ammo > 0) {
                 // Kliknili smo na zaslon -> preverimo, ali smo zadeli srako
+                gunShot.play();
                 if (isMagpieHit()) {
                     score++;
                     // Lahko jo respawnamo ali pustimo, da odleti
@@ -161,6 +169,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
                 // Zmanjšamo strel
                 ammo--;
             }
+            emptyGunShot.play();
         }
 
         // Reload ob pritisku na tipko R
