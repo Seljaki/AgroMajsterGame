@@ -51,6 +51,7 @@ public class MapScreen extends ScreenAdapter {
     private Stage stage;
     private Skin skin;
     InputMultiplexer inputMultiplexer;
+    private Vector2 cameraVelocity = new Vector2(0,0);
 
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
     private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
@@ -110,6 +111,8 @@ public class MapScreen extends ScreenAdapter {
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(new InputAdapter(){
+            float deltaX;
+            float deltaY;
             @Override
             public boolean scrolled(float amountX, float amountY) {
                 camera.zoom += amountY * Gdx.graphics.getDeltaTime() * 10f;
@@ -120,9 +123,11 @@ public class MapScreen extends ScreenAdapter {
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
                 if(posSet) {
-                    float deltaX = (lastX - screenX) * camera.zoom * (camera.viewportWidth / Gdx.graphics.getWidth());
-                    float deltaY = -(lastY - screenY) * camera.zoom * (camera.viewportHeight / Gdx.graphics.getHeight());
+                    deltaX = (lastX - screenX) * camera.zoom * (camera.viewportWidth / Gdx.graphics.getWidth());
+                    deltaY = -(lastY - screenY) * camera.zoom * (camera.viewportHeight / Gdx.graphics.getHeight());
 
+                    cameraVelocity.x = 0;
+                    cameraVelocity.y = 0;
                     camera.translate(deltaX, deltaY);
                 }
 
@@ -135,6 +140,10 @@ public class MapScreen extends ScreenAdapter {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 posSet = false;
+
+                cameraVelocity.x = deltaX;
+                cameraVelocity.y = deltaY;
+
                 return true;
             }
         });
@@ -147,6 +156,10 @@ public class MapScreen extends ScreenAdapter {
 
         handleInput();
 
+
+        camera.translate(cameraVelocity);
+        cameraVelocity.x *= 0.75f;
+        cameraVelocity.y *= 0.75f;
         camera.update();
 
         tiledMapRenderer.setView(camera);
