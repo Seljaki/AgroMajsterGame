@@ -13,21 +13,21 @@ ammo
   index: -1
 continue1
   rotate: false
-  xy: 5748, 1799
+  xy: 2, 2
   size: 94, 30
   orig: 94, 30
   offset: 0, 0
   index: -1
 continue2
   rotate: false
-  xy: 7810, 3926
+  xy: 5862, 2582
   size: 94, 30
   orig: 94, 30
   offset: 0, 0
   index: -1
 continue3
   rotate: false
-  xy: 2, 2
+  xy: 6376, 3096
   size: 94, 30
   orig: 94, 30
   offset: 0, 0
@@ -233,6 +233,34 @@ noHeart
   xy: 1400, 561
   size: 17, 17
   orig: 17, 17
+  offset: 0, 0
+  index: -1
+play
+  rotate: false
+  xy: 5748, 1745
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+playHover
+  rotate: false
+  xy: 7810, 3872
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+repeat
+  rotate: false
+  xy: 5659, 717
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+repeatHover
+  rotate: false
+  xy: 5141, 1002
+  size: 84, 84
+  orig: 84, 84
   offset: 0, 0
   index: -1
 scope

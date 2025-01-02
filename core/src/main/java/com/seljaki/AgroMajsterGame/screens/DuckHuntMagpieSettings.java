@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,7 +28,7 @@ public class DuckHuntMagpieSettings extends ScreenAdapter {
 
     private final SeljakiMain game;
     private Skin uiSkin;
-
+    private BitmapFont gameFont;
     private final AssetManager assetManager;
     private TextureAtlas gameplayAtlas;
     private Viewport viewport;
@@ -43,6 +44,7 @@ public class DuckHuntMagpieSettings extends ScreenAdapter {
         viewport = game.viewport;
         stage = new Stage(viewport, game.batch);
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
+        gameFont = assetManager.get(AssetDescriptors.GAME_FONT);
         batch = new SpriteBatch();
         settingsUi();
         Gdx.input.setInputProcessor(stage);
@@ -65,17 +67,17 @@ public class DuckHuntMagpieSettings extends ScreenAdapter {
         stage.addActor(table);
 
         Label.LabelStyle style = new Label.LabelStyle();
-        style.font = uiSkin.getFont("window");
+        style.font = gameFont;
         style.fontColor = new Color(Color.BLACK);
         Label title = new Label("Settings", style);
-        title.setFontScale(2f);
-        table.add(title).padBottom(20).expand().row();
+        title.setFontScale(1f);
+        table.add(title).padBottom(20).expand().colspan(2).row();
 
         TextButton.TextButtonStyle style2 = new TextButton.TextButtonStyle();
-        style2.font = uiSkin.getFont("font");
+        style2.font = gameFont;
         Label chooseDifficultyLabel = new Label("Choose difficulty:", style);
-        chooseDifficultyLabel.setFontScale(1.5f);
-        table.add(chooseDifficultyLabel).pad(0).expand().row();
+        chooseDifficultyLabel.setFontScale(0.7f);
+        table.add(chooseDifficultyLabel).pad(0).expand().colspan(2).row();
 
         new SelectBox.SelectBoxStyle();
         SelectBox.SelectBoxStyle selectBoxStyle;
@@ -94,35 +96,56 @@ public class DuckHuntMagpieSettings extends ScreenAdapter {
                 GameManager.INSTANCE.setDifficulty(selectedDifficulty); // Shranjevanje nastavitve
             }
         });
-        table.add(chooseDifficultySelectBox).padTop(10).expand().row();
-        table.add(continueButton()).padBottom(20).expand().row();
+        table.add(chooseDifficultySelectBox).padTop(10).expand().colspan(2).row();
+        table.add(repeatButton()).padBottom(20).expand();
+        table.add(resumeButton()).padBottom(20).expand().row();
         return table;
     }
-    private Actor continueButton(){
-        TextureRegion continueButtonTR = gameplayAtlas.findRegion("continue2");
-        TextureRegion continueButtonHoverTR = gameplayAtlas.findRegion("continue3");
+    private Actor repeatButton(){
+        TextureRegion repeatButtonTR = gameplayAtlas.findRegion("repeat");
+        TextureRegion repeatButtonHoverTR = gameplayAtlas.findRegion("repeatHover");
 
-        TextureRegionDrawable continueButtonDrawable = new TextureRegionDrawable(continueButtonTR);
-        TextureRegionDrawable continueButtonHoverDrawable = new TextureRegionDrawable(continueButtonHoverTR);
+        TextureRegionDrawable repeatButtonDrawable = new TextureRegionDrawable(repeatButtonTR);
+        TextureRegionDrawable repeatButtonHoverDrawable = new TextureRegionDrawable(repeatButtonHoverTR);
 
-        ImageButton.ImageButtonStyle continueButtonStyle = new ImageButton.ImageButtonStyle();
-        continueButtonStyle.imageUp = continueButtonDrawable;
-        continueButtonStyle.imageDown = continueButtonHoverDrawable;
+        ImageButton.ImageButtonStyle repeatButtonStyle = new ImageButton.ImageButtonStyle();
+        repeatButtonStyle.imageUp = repeatButtonDrawable;
+        repeatButtonStyle.imageDown = repeatButtonHoverDrawable;
 
-        ImageButton continueButton = new ImageButton(continueButtonStyle);
-
-        continueButton.addListener(new ClickListener() {
+        ImageButton repeatButton = new ImageButton(repeatButtonStyle);
+        repeatButton.setSize(50, 50);
+        repeatButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new DuckHuntMagpie(game));
             }
         });
-        return continueButton;
+        return repeatButton;
+    }
+    private Actor resumeButton(){
+        TextureRegion resumeButtonTR = gameplayAtlas.findRegion("play");
+        TextureRegion resumeButtonHoverTR = gameplayAtlas.findRegion("playHover");
+
+        TextureRegionDrawable resumeButtonDrawable = new TextureRegionDrawable(resumeButtonTR);
+        TextureRegionDrawable resumeButtonHoverDrawable = new TextureRegionDrawable(resumeButtonHoverTR);
+
+        ImageButton.ImageButtonStyle resumeButtonStyle = new ImageButton.ImageButtonStyle();
+        resumeButtonStyle.imageUp = resumeButtonDrawable;
+        resumeButtonStyle.imageDown = resumeButtonHoverDrawable;
+        ImageButton resumeButton = new ImageButton(resumeButtonStyle);
+        resumeButton.setSize(50f, 50f);
+        resumeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new DuckHuntMagpie(game));
+            }
+        });
+        return resumeButton;
     }
     @Override
     public void render(float delta) {
         stage.act(delta);
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
         stage.draw();
     }
 

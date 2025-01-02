@@ -87,8 +87,8 @@ public class DuckHuntMagpieGameOverScreen extends ScreenAdapter {
         return table;
     }
     private Actor continueButton(){
-        TextureRegion continueButtonTR = gameplayAtlas.findRegion("continue2");
-        TextureRegion continueButtonHoverTR = gameplayAtlas.findRegion("continue3");
+        TextureRegion continueButtonTR = gameplayAtlas.findRegion("repeat");
+        TextureRegion continueButtonHoverTR = gameplayAtlas.findRegion("repeatHover");
 
         TextureRegionDrawable continueButtonDrawable = new TextureRegionDrawable(continueButtonTR);
         TextureRegionDrawable continueButtonHoverDrawable = new TextureRegionDrawable(continueButtonHoverTR);

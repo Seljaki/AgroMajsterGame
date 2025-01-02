@@ -339,7 +339,6 @@ public class DuckHuntMagpie extends ScreenAdapter {
 
     private void spawnBird() {
         if (activeBirds.size >= maxBirdsAtOnce) {
-            // Že imamo max dovolj ptic, ne ustvarjaj nove
             return;
         }
 
