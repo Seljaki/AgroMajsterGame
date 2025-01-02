@@ -3,14 +3,21 @@ package com.seljaki.AgroMajsterGame.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.seljaki.AgroMajsterGame.GameManager;
+import com.seljaki.AgroMajsterGame.MagpieBird;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.AssetPaths;
@@ -26,18 +33,31 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private TextureAtlas gameplayAtlas;
 
     private TextureRegion crosshairRegion;
+    private TextureRegion heartFull;
+    private TextureRegion heartEmpty;
     private float scopeWidth, scopeHeight;
     private Sound gunShot;
     private Sound emptyGunShot;
+    private Sound reloadSound;
     private float scopeScale = 0.15f;
     private int lives = 3;
+
+    private boolean showReloadMessage = false;
+    private float reloadMessageTimer = 100f;
+
+    private BitmapFont messageFont;
+    private BitmapFont ammoFont;
+    private Viewport viewport;
 
     // ----- NOVO -----
     private Animation<TextureRegion> magpieAnimationLeft;
     private Animation<TextureRegion> magpieAnimationRight;
+    private int maxBirdsAtOnce;
+    private float birdBaseSpeed;
 
     // Oba tipa animacij (levo-desno)
     private boolean flyingLeftToRight; // določa smer
+    private ShapeRenderer shapeRenderer;
 
     // Scale srake, da je 0.4 = 40% original size
     private float magpieScale = 0.4f;
@@ -46,6 +66,9 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private float spawnTimer = 0f;
     private float spawnInterval = 2f; // kolikokrat približno čakamo do next spawn
     private boolean birdActive = false; // ali je sraka trenutno "v zraku"
+
+    private Array<MagpieBird> activeBirds = new Array<>();
+
 
     // ----------------
 
@@ -79,24 +102,51 @@ public class DuckHuntMagpie extends ScreenAdapter {
         assetManager.load(AssetDescriptors.GAMEPLAY);
         assetManager.load(AssetDescriptors.EMPTY_GUN_SHOT);
         assetManager.load(AssetDescriptors.GUN_SHOT);
+        assetManager.load(AssetDescriptors.GAME_FONT);
+        assetManager.load(AssetDescriptors.SELECT_SOUND);
+        assetManager.load(AssetDescriptors.RELOAD_SOUND);
         assetManager.finishLoading();
+
+        messageFont = assetManager.get(AssetPaths.GAME_FONT);
 
         this.skin = assetManager.get(AssetPaths.UI_SKIN);
         gunShot = assetManager.get(AssetDescriptors.GUN_SHOT);
         emptyGunShot = assetManager.get(AssetDescriptors.EMPTY_GUN_SHOT);
+        reloadSound = assetManager.get(AssetDescriptors.RELOAD_SOUND);
     }
 
     @Override
     public void show() {
         batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer(); // Ustvarimo ShapeRenderer za debug
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
+        viewport = game.viewport;
+        screenWidth = viewport.getScreenWidth();
+        screenHeight = viewport.getScreenHeight();
 
-        screenWidth = Gdx.graphics.getWidth();
-        screenHeight = Gdx.graphics.getHeight();
+        String difficulty = GameManager.INSTANCE.getDifficulty();  // "Easy" / "Medium" / "Hard"
+        switch (difficulty) {
+            case "Easy":
+                maxBirdsAtOnce = 3;
+                birdBaseSpeed = 100f;
+                break;
+            case "Medium":
+                maxBirdsAtOnce = 5;
+                birdBaseSpeed = 150f;
+                break;
+            case "Hard":
+                maxBirdsAtOnce = 8;
+                birdBaseSpeed = 200f;
+                break;
+            default:
+                maxBirdsAtOnce = 3; // fallback
+                birdBaseSpeed = 100f;
+        }
 
         random = new Random();
 
-        // Naredimo array sličic za levo
+        heartFull = new TextureRegion(gameplayAtlas.findRegion("heart"));
+        heartEmpty = new TextureRegion(gameplayAtlas.findRegion("noHeart"));
         Array<TextureRegion> framesLeft = new Array<>();
         for (String magpieSpriteName : RegionNames.MAGPIE_SPRITES_LEFT) {
             TextureRegion tex = gameplayAtlas.findRegion(magpieSpriteName);
@@ -137,19 +187,31 @@ public class DuckHuntMagpie extends ScreenAdapter {
         // Najprej posodobimo streljanje
         handleInput();
 
+        if (showReloadMessage) {
+            reloadMessageTimer -= delta; // Odštej čas
+            if (reloadMessageTimer <= 0) {
+                showReloadMessage = false; // Skrij napis po 1 sekundi
+            }
+        }
+
         batch.begin();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        float heartSize = 50; // Velikost src
+        float startX = (screenWidth - (heartSize * 3)) / 2; // Začetek, da so srca centrirana
+        float heartY = screenHeight - heartSize - 10; // Y-koordinata (zgoraj, z 10 px odmika)
+
+
+
 
         // Narišemo ozadje
         TextureRegion bg = gameplayAtlas.findRegion(RegionNames.BG_DG);
         batch.draw(bg, 0, 0, screenWidth, screenHeight);
 
-        // ----- SRAKA - UPRAVLJANJE spawn in premik -----
 
         // Če nimamo aktivne srake na ekranu
         if (!birdActive) {
-            // Odbijamo čas
             spawnTimer += delta;
-            // Ko preteče spawnInterval, ustvarimo srako
             if (spawnTimer >= spawnInterval) {
                 spawnBird();         // ustvari srako
                 birdActive = true;   // zdaj je aktivna
@@ -161,18 +223,18 @@ public class DuckHuntMagpie extends ScreenAdapter {
             // Sraka je aktivna, torej jo premikamo, rišemo
             animationTimer += delta;
             magpieX += magpieSpeed * delta;
-
-            // Ali je prišla izven ekrana (glede na smer letenja)?
-            if (flyingLeftToRight && magpieX > screenWidth + 50) {
+            //System.out.println(magpieX + "?" + screenWidth);
+            if (!flyingLeftToRight && magpieX > screenWidth + 100) {
+                //System.out.println("checking left2Right " + magpieX + " > " + screenWidth);
                 birdActive = false;
-                lives--;
+                lives = Math.max(0, lives - 1); // Zmanjšaj življenja, ne manj kot 0
             }
-            if (!flyingLeftToRight && magpieX < -150) {
+            if (flyingLeftToRight && magpieX < -250) {
+                //System.out.println("checking right2Left " + magpieX + " < -250");
                 birdActive = false;
-                lives--;
+                lives = Math.max(0, lives - 1);
             }
 
-            // Izberemo ustrezno animacijo (levo/desno)
             TextureRegion currentFrame;
             if (flyingLeftToRight) {
                 currentFrame = magpieAnimationLeft.getKeyFrame(animationTimer);
@@ -180,51 +242,77 @@ public class DuckHuntMagpie extends ScreenAdapter {
                 currentFrame = magpieAnimationRight.getKeyFrame(animationTimer);
             }
 
-            // Pomanjšamo srako (0.4f)
             float birdW = currentFrame.getRegionWidth() * magpieScale;
             float birdH = currentFrame.getRegionHeight() * magpieScale;
 
-            // Narišemo srako
             batch.draw(currentFrame, magpieX, magpieY, birdW, birdH);
+            shapeRenderer.rect(magpieX, magpieY, birdW, birdH); // Izris okvira okoli srake
         }
 
-        // Narišemo crosshair
         batch.draw(crosshairRegion, crosshairX, crosshairY, scopeWidth, scopeHeight);
 
-        // UI: Score in Ammo
-        skin.getFont("window").draw(batch, "Score: " + score, 10, screenHeight - 10);
-        float ammoX = screenWidth - 120; // X-koordinata za ammo (prilagodi glede na velikost slike)
-        float ammoY = screenHeight - 90;               // Y-koordinata za ammo
 
-// Izris slike "ammo"
+        ammoFont = assetManager.get(AssetDescriptors.GAME_FONT);
+        ammoFont.setColor(Color.BLACK);
+        float scoreX = 20;
+        float scoreY = screenHeight - 90;
+        Image scoreImage = new Image(gameplayAtlas.findRegion("crow"));
+        scoreImage.setSize(90,90);
+        scoreImage.setPosition(scoreX, scoreY);
+        scoreImage.draw(batch, 1);
+        ammoFont.draw(batch, "" + score, scoreX + scoreImage.getWidth() + 10, scoreY + scoreImage.getHeight() / 2);
+        float ammoX = screenWidth - 120;
+        float ammoY = screenHeight - 90;
+
+
         Image ammoImage = new Image(gameplayAtlas.findRegion("ammo"));
         ammoImage.setSize(70,70);
         ammoImage.setPosition(ammoX, ammoY);
-        ammoImage.draw(batch, 1); // '1' je alpha (neprosojnost)
-// Izris števila nabojev zraven slike
+        ammoImage.draw(batch, 1);
         BitmapFont font = new BitmapFont();
         font.setColor(new Color(Color.BLACK));
         font.getData().setScale(3f);
-        font.draw(batch, "" + ammo, ammoX + ammoImage.getWidth() + 10, ammoY + ammoImage.getHeight() / 2);
-        skin.getFont("window").draw(batch, "[R] za reload", 10, screenHeight - 50);
+
+        ammoFont.draw(batch, "" + ammo, ammoX + ammoImage.getWidth() + 10, ammoY + ammoImage.getHeight() / 2);
+
+        if (showReloadMessage) {
+            messageFont.setColor(1, 0, 0, 1);
+            GlyphLayout layout = new GlyphLayout();
+            String message = "must reload [R]";
+            layout.setText(messageFont, message);
+            float textWidth = layout.width;
+            float x = (screenWidth - textWidth) / 2;
+            float y = (float) screenHeight /4;
+            messageFont.draw(batch, layout, x, y);
+        }
+        for (int i = 0; i < 3; i++) {
+            if (i < lives) {
+                batch.draw(heartFull, startX + i * heartSize, heartY, heartSize, heartSize);
+            } else {
+                batch.draw(heartEmpty, startX + i * heartSize, heartY, heartSize, heartSize);
+            }
+        }
 
         batch.end();
+
+
+        shapeRenderer.end();
+
     }
 
     private void handleInput() {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             if (ammo > 0) {
                 gunShot.play();
-                // Preverimo zadetek samo, če je ptica aktivna
                 if (birdActive && isMagpieHit()) {
                     score++;
                     birdActive = false;
                 }
                 ammo--;
             } else {
-                // Če ni nabojev
-                //TODO: ADD LABEL "MUST RELOAD"
                 emptyGunShot.play();
+                showReloadMessage = true;
+                reloadMessageTimer = 0.7f;
             }
         }
 
@@ -237,33 +325,32 @@ public class DuckHuntMagpie extends ScreenAdapter {
 
         // Reload ob pritisku na tipko R
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            reloadSound.play();
             ammo = MAX_AMMO;
         }
     }
 
-    /** Ustvari novo srako z naključno smerjo in y-pozicijo. */
     private void spawnBird() {
-        animationTimer = 0f;
-
-        // Naključno določimo, ali leti z leve na desno ali obratno
-        flyingLeftToRight = random.nextBoolean();
-
-        if (flyingLeftToRight) {
-            // Začne izven levega roba
-            magpieX = screenWidth + 100;
-            magpieSpeed = -100f; // negativna hitrost
-
-        } else {
-            // Začne izven desnega roba
-            magpieX = -100;
-            magpieSpeed = 100f; // pozitivna hitrost
+        if (activeBirds.size >= maxBirdsAtOnce) {
+            // Že imamo max dovolj ptic, ne ustvarjaj nove
+            return;
         }
 
-        // Naključna višina
-        magpieY = random.nextFloat() * (screenHeight - 200) + 50;
+        boolean leftToRight = random.nextBoolean();
+        float startX, chosenSpeed;
+        if (leftToRight) {
+            startX = screenWidth + 200;
+            chosenSpeed = -birdBaseSpeed;  // negativna, leti levo
+        } else {
+            startX = -200;
+            chosenSpeed = birdBaseSpeed;   // pozitivna, leti desno
+        }
+
+        float startY = random.nextFloat() * (screenHeight - 200) + 50;
+        MagpieBird newBird = new MagpieBird(startX, startY, chosenSpeed, leftToRight);
+        activeBirds.add(newBird);
     }
 
-    /** Preveri, ali je križec znotraj bounding box srake. */
     private boolean isMagpieHit() {
         // Izberemo trenutno sličico animacije
         TextureRegion frame = flyingLeftToRight
