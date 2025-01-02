@@ -8,8 +8,11 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -46,6 +49,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private final TextureAtlas gameplayAtlas;
     private final Sound moleSqueak;
     private final Music gameMusic;
+    private final ParticleEffect particleEffectMoleBlood;
 
     public WhackAMoleScreen(SeljakiMain game) {
         this.game = game;
@@ -60,6 +64,8 @@ public class WhackAMoleScreen extends ScreenAdapter {
         moleSqueak = game.moleSqueak;
         gameMusic = game.whackAMoleMusic;
         gameMusic.setLooping(true);
+
+        particleEffectMoleBlood = game.particleEffectMoleBlood;
     }
 
     @Override
@@ -72,6 +78,11 @@ public class WhackAMoleScreen extends ScreenAdapter {
         stageFront.draw();
         stageScore.act(delta);
         stageScore.draw();
+
+        if (particleEffectMoleBlood.isComplete()) {
+            particleEffectMoleBlood.reset();
+        }
+
         timeRemaining -= delta;
         if (timeRemaining < 0) timeRemaining = 0;
         updateTimerBar();
@@ -169,8 +180,27 @@ public class WhackAMoleScreen extends ScreenAdapter {
                         private boolean clicked = false;
 
                         @Override
-                        public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y, int pointer, int button) {
+                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                             if (!clicked) {
+                                ParticleEffect particleEffectInstance = new ParticleEffect(particleEffectMoleBlood);
+                                particleEffectInstance.setPosition(mole.getX() + mole.getWidth() / 2, mole.getY() + mole.getHeight() / 2);
+                                particleEffectInstance.start();
+                                Actor particleActor = new Actor() {
+                                    @Override
+                                    public void draw(Batch batch, float parentAlpha) {
+                                        particleEffectInstance.draw(batch, Gdx.graphics.getDeltaTime());
+                                    }
+
+                                    @Override
+                                    public void act(float delta) {
+                                        super.act(delta);
+                                        if (particleEffectInstance.isComplete()) {
+                                            particleEffectInstance.dispose();
+                                            this.remove();
+                                        }
+                                    }
+                                };
+                                stageFront.addActor(particleActor);
                                 mole.setDrawable(new TextureRegionDrawable(new TextureRegion(mole2Texture)));
                                 clicked = true;
                                 score++;
@@ -189,6 +219,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
                             }
                             return true;
                         }
+
                     });
 
                     mole.addAction(Actions.sequence(
@@ -284,7 +315,5 @@ public class WhackAMoleScreen extends ScreenAdapter {
         stage.dispose();
         stageFront.dispose();
         stageScore.dispose();
-        gameMusic.dispose();
-        moleSqueak.dispose();
     }
 }

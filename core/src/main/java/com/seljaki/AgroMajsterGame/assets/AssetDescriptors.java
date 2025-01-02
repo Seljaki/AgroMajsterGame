@@ -17,6 +17,8 @@ public class AssetDescriptors {
     public static final AssetDescriptor<Sound> MOLE_SQUEAK_SOUND = new AssetDescriptor<Sound>(AssetPaths.MOLE_SQUEAK_SOUND, Sound.class);
     public static final AssetDescriptor<Music> WHACK_A_MOLE_MUSIC = new AssetDescriptor<Music>(AssetPaths.WHACK_A_MOLE_MUSIC, Music.class);
 
+    public static final AssetDescriptor<ParticleEffect> PARTICLE_EFFECT_MOLE_BLOOD =
+        new AssetDescriptor<ParticleEffect>(AssetPaths.PARTICLE_EFFECT_MOLE_BLOOD, ParticleEffect.class);
 
     private AssetDescriptors() {
     }

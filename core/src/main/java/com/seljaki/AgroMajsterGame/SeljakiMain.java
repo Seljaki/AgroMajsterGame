@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -28,7 +29,7 @@ public class SeljakiMain extends Game {
     public TextureAtlas gameplayAtlas;
     public Sound moleSqueak;
     public Music whackAMoleMusic;
-
+    public ParticleEffect particleEffectMoleBlood;
     @Override
     public void create() {
         viewport = new FitViewport(640, 480);
@@ -37,12 +38,14 @@ public class SeljakiMain extends Game {
         assetManager.load(AssetDescriptors.SKIN);
         assetManager.load(AssetDescriptors.MOLE_SQUEAK_SOUND);
         assetManager.load(AssetDescriptors.WHACK_A_MOLE_MUSIC);
+        assetManager.load(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
         assetManager.finishLoading();
 
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
         skin = assetManager.get(AssetDescriptors.SKIN);
         moleSqueak = assetManager.get(AssetDescriptors.MOLE_SQUEAK_SOUND);
         whackAMoleMusic = assetManager.get(AssetDescriptors.WHACK_A_MOLE_MUSIC);
+        particleEffectMoleBlood = assetManager.get(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
         batch = new SpriteBatch();
         seljakiClient = SeljakiClient.loadData();
 
