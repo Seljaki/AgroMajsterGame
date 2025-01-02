@@ -5,14 +5,17 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.AssetPaths;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
+import okhttp3.internal.http2.Settings;
 
 import java.util.Random;
 
@@ -27,6 +30,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private Sound gunShot;
     private Sound emptyGunShot;
     private float scopeScale = 0.15f;
+    private int lives = 3;
 
     // ----- NOVO -----
     private Animation<TextureRegion> magpieAnimationLeft;
@@ -161,9 +165,11 @@ public class DuckHuntMagpie extends ScreenAdapter {
             // Ali je prišla izven ekrana (glede na smer letenja)?
             if (flyingLeftToRight && magpieX > screenWidth + 50) {
                 birdActive = false;
+                lives--;
             }
             if (!flyingLeftToRight && magpieX < -150) {
                 birdActive = false;
+                lives--;
             }
 
             // Izberemo ustrezno animacijo (levo/desno)
@@ -187,7 +193,19 @@ public class DuckHuntMagpie extends ScreenAdapter {
 
         // UI: Score in Ammo
         skin.getFont("window").draw(batch, "Score: " + score, 10, screenHeight - 10);
-        skin.getFont("window").draw(batch, "Ammo: " + ammo, 10, screenHeight - 30);
+        float ammoX = screenWidth - 120; // X-koordinata za ammo (prilagodi glede na velikost slike)
+        float ammoY = screenHeight - 90;               // Y-koordinata za ammo
+
+// Izris slike "ammo"
+        Image ammoImage = new Image(gameplayAtlas.findRegion("ammo"));
+        ammoImage.setSize(70,70);
+        ammoImage.setPosition(ammoX, ammoY);
+        ammoImage.draw(batch, 1); // '1' je alpha (neprosojnost)
+// Izris števila nabojev zraven slike
+        BitmapFont font = new BitmapFont();
+        font.setColor(new Color(Color.BLACK));
+        font.getData().setScale(3f);
+        font.draw(batch, "" + ammo, ammoX + ammoImage.getWidth() + 10, ammoY + ammoImage.getHeight() / 2);
         skin.getFont("window").draw(batch, "[R] za reload", 10, screenHeight - 50);
 
         batch.end();
@@ -200,14 +218,21 @@ public class DuckHuntMagpie extends ScreenAdapter {
                 // Preverimo zadetek samo, če je ptica aktivna
                 if (birdActive && isMagpieHit()) {
                     score++;
-                    // "Odstranimo" ptico takoj, da jo bo spawnTimer čez nekaj časa spet ustvaril
                     birdActive = false;
                 }
                 ammo--;
             } else {
                 // Če ni nabojev
+                //TODO: ADD LABEL "MUST RELOAD"
                 emptyGunShot.play();
             }
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)){
+            // Pause
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.S)){
+            game.setScreen(new DuckHuntMagpieSettings(game));
         }
 
         // Reload ob pritisku na tipko R

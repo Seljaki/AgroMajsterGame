@@ -4,191 +4,219 @@ size: 8192, 4096
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+ammo
+  rotate: false
+  xy: 5234, 1317
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+continue1
+  rotate: false
+  xy: 5748, 1799
+  size: 94, 30
+  orig: 94, 30
+  offset: 0, 0
+  index: -1
+continue2
+  rotate: false
+  xy: 7810, 3926
+  size: 94, 30
+  orig: 94, 30
+  offset: 0, 0
+  index: -1
+continue3
+  rotate: false
+  xy: 2, 2
+  size: 94, 30
+  orig: 94, 30
+  offset: 0, 0
+  index: -1
 crosshair
   rotate: false
-  xy: 5234, 1285
+  xy: 5234, 803
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 duckMagpieGameBg
   rotate: false
-  xy: 2, 1056
+  xy: 2, 1088
   size: 5230, 2868
   orig: 5230, 2868
   offset: 0, 0
   index: -1
 magpieSpriteLeft1
   rotate: false
-  xy: 5234, 2853
+  xy: 5234, 2885
   size: 626, 544
   orig: 626, 544
   offset: 0, 0
   index: -1
 magpieSpriteLeft10
   rotate: false
-  xy: 7184, 3485
+  xy: 7184, 3517
   size: 624, 439
   orig: 624, 439
   offset: 0, 0
   index: -1
 magpieSpriteLeft11
   rotate: false
-  xy: 2, 529
+  xy: 2, 561
   size: 697, 525
   orig: 697, 525
   offset: 0, 0
   index: -1
 magpieSpriteLeft12
   rotate: false
-  xy: 5234, 3399
+  xy: 5234, 3431
   size: 697, 525
   orig: 697, 525
   offset: 0, 0
   index: -1
 magpieSpriteLeft2
   rotate: false
-  xy: 4514, 679
+  xy: 4514, 711
   size: 625, 375
   orig: 625, 375
   offset: 0, 0
   index: -1
 magpieSpriteLeft3
   rotate: false
-  xy: 5234, 943
+  xy: 7184, 3175
   size: 626, 340
   orig: 626, 340
   offset: 0, 0
   index: -1
 magpieSpriteLeft4
   rotate: false
-  xy: 5933, 3421
+  xy: 5933, 3453
   size: 628, 503
   orig: 628, 503
   offset: 0, 0
   index: -1
 magpieSpriteLeft5
   rotate: false
-  xy: 6563, 3429
+  xy: 6563, 3461
   size: 619, 495
   orig: 619, 495
   offset: 0, 0
   index: -1
 magpieSpriteLeft6
   rotate: false
-  xy: 1400, 548
+  xy: 1400, 580
   size: 621, 506
   orig: 621, 506
   offset: 0, 0
   index: -1
 magpieSpriteLeft7
   rotate: false
-  xy: 3270, 658
+  xy: 3270, 690
   size: 620, 396
   orig: 620, 396
   offset: 0, 0
   index: -1
 magpieSpriteLeft8
   rotate: false
-  xy: 5769, 568
+  xy: 3899, 350
   size: 621, 338
   orig: 621, 338
   offset: 0, 0
   index: -1
 magpieSpriteLeft9
   rotate: false
-  xy: 2644, 290
+  xy: 3271, 23
   size: 616, 323
   orig: 616, 323
   offset: 0, 0
   index: -1
 magpieSpriteRight1
   rotate: false
-  xy: 5234, 2307
+  xy: 5234, 2339
   size: 626, 544
   orig: 626, 544
   offset: 0, 0
   index: -1
 magpieSpriteRight10
   rotate: false
-  xy: 2644, 615
+  xy: 2644, 647
   size: 624, 439
   orig: 624, 439
   offset: 0, 0
   index: -1
 magpieSpriteRight11
   rotate: false
-  xy: 2, 2
+  xy: 2, 34
   size: 697, 525
   orig: 697, 525
   offset: 0, 0
   index: -1
 magpieSpriteRight12
   rotate: false
-  xy: 701, 529
+  xy: 701, 561
   size: 697, 525
   orig: 697, 525
   offset: 0, 0
   index: -1
 magpieSpriteRight2
   rotate: false
-  xy: 5862, 908
+  xy: 2644, 270
   size: 625, 375
   orig: 625, 375
   offset: 0, 0
   index: -1
 magpieSpriteRight3
   rotate: false
-  xy: 5141, 601
+  xy: 3271, 348
   size: 626, 340
   orig: 626, 340
   offset: 0, 0
   index: -1
 magpieSpriteRight4
   rotate: false
-  xy: 701, 24
+  xy: 701, 56
   size: 628, 503
   orig: 628, 503
   offset: 0, 0
   index: -1
 magpieSpriteRight5
   rotate: false
-  xy: 2023, 559
+  xy: 2023, 591
   size: 619, 495
   orig: 619, 495
   offset: 0, 0
   index: -1
 magpieSpriteRight6
   rotate: false
-  xy: 5234, 1799
+  xy: 5234, 1831
   size: 621, 506
   orig: 621, 506
   offset: 0, 0
   index: -1
 magpieSpriteRight7
   rotate: false
-  xy: 3892, 658
+  xy: 3892, 690
   size: 620, 396
   orig: 620, 396
   offset: 0, 0
   index: -1
 magpieSpriteRight8
   rotate: false
-  xy: 7184, 3145
+  xy: 4522, 371
   size: 621, 338
   orig: 621, 338
   offset: 0, 0
   index: -1
 magpieSpriteRight9
   rotate: false
-  xy: 3270, 333
+  xy: 5933, 3128
   size: 616, 323
   orig: 616, 323
   offset: 0, 0
   index: -1
 scope
   rotate: false
-  xy: 5748, 1285
+  xy: 5145, 289
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
