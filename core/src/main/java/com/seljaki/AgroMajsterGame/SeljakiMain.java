@@ -26,6 +26,9 @@ public class SeljakiMain extends Game {
     public SeljakiClient seljakiClient;
 
     private AssetManager assetManager;
+    public AssetManager getAssetManager() {
+        return assetManager;
+    }
     public TextureAtlas gameplayAtlas;
     public Sound moleSqueak;
     public Music whackAMoleMusic;
@@ -36,18 +39,13 @@ public class SeljakiMain extends Game {
         assetManager = new AssetManager();
         assetManager.load(AssetDescriptors.GAMEPLAY);
         assetManager.load(AssetDescriptors.SKIN);
-        assetManager.load(AssetDescriptors.MOLE_SQUEAK_SOUND);
-        assetManager.load(AssetDescriptors.WHACK_A_MOLE_MUSIC);
-        assetManager.load(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
         assetManager.finishLoading();
 
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
         skin = assetManager.get(AssetDescriptors.SKIN);
-        moleSqueak = assetManager.get(AssetDescriptors.MOLE_SQUEAK_SOUND);
-        whackAMoleMusic = assetManager.get(AssetDescriptors.WHACK_A_MOLE_MUSIC);
-        particleEffectMoleBlood = assetManager.get(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
         batch = new SpriteBatch();
         seljakiClient = SeljakiClient.loadData();
+        assetManager = new AssetManager();
 
         if(seljakiClient.isLoggedIn())
             setScreen(new MapScreen(this));

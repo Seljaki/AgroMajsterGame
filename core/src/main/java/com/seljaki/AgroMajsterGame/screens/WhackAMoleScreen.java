@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
+import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
 
 import java.util.HashMap;
@@ -50,6 +51,8 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private final Sound moleSqueak;
     private final Music gameMusic;
     private final ParticleEffect particleEffectMoleBlood;
+    private AssetManager assetManager;
+
 
     public WhackAMoleScreen(SeljakiMain game) {
         this.game = game;
@@ -58,14 +61,19 @@ public class WhackAMoleScreen extends ScreenAdapter {
         this.activeMoles = 0;
         this.score = 0;
         this.timeRemaining = totalTime;
+        assetManager = game.getAssetManager();
+
+        assetManager.load(AssetDescriptors.MOLE_SQUEAK_SOUND);
+        assetManager.load(AssetDescriptors.WHACK_A_MOLE_MUSIC);
+        assetManager.load(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
+        assetManager.finishLoading();
 
         skin = game.skin;
         gameplayAtlas = game.gameplayAtlas;
-        moleSqueak = game.moleSqueak;
-        gameMusic = game.whackAMoleMusic;
+        moleSqueak = assetManager.get(AssetDescriptors.MOLE_SQUEAK_SOUND);
+        gameMusic = assetManager.get(AssetDescriptors.WHACK_A_MOLE_MUSIC);
         gameMusic.setLooping(true);
-
-        particleEffectMoleBlood = game.particleEffectMoleBlood;
+        particleEffectMoleBlood = assetManager.get(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
     }
 
     @Override
