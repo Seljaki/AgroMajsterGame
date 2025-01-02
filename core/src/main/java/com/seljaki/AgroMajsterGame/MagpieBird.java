@@ -1,10 +1,11 @@
 package com.seljaki.AgroMajsterGame;
 
 public class MagpieBird {
-    float x, y;         // pozicija
-    float speed;        // lahko +/- (smer)
-    boolean flyingLeftToRight;
-    float animationTimer;
+    public float x;
+    public float y;         // pozicija
+    public float speed;        // lahko +/- (smer)
+    public boolean flyingLeftToRight;
+    public float animationTimer;
 
     public MagpieBird(float x, float y, float speed, boolean flyingLeftToRight) {
         this.x = x;
