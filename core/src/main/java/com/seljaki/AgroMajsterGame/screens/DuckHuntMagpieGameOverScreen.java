@@ -110,7 +110,7 @@ public class DuckHuntMagpieGameOverScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         stage.act(delta);
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
         stage.draw();
     }
 

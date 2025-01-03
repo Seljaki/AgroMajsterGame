@@ -2,8 +2,8 @@ package com.seljaki.AgroMajsterGame;
 
 public class MagpieBird {
     public float x;
-    public float y;         // pozicija
-    public float speed;        // lahko +/- (smer)
+    public float y;
+    public float speed;
     public boolean flyingLeftToRight;
     public float animationTimer;
 

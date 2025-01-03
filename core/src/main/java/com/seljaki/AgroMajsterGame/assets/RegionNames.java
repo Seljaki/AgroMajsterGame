@@ -30,7 +30,35 @@ public class RegionNames {
     public static final String MAGPIE_SPRITE_RIGHT_9 = "magpieSpriteRight9";
     public static final String MAGPIE_SPRITE_RIGHT_10 = "magpieSpriteRight10";
     public static final String MAGPIE_SPRITE_RIGHT_11 = "magpieSpriteRight11";
-    public static final String MAGPIE_SPRITE_RIGHT_12 = "magpieSpriteRight2";
+    public static final String MAGPIE_SPRITE_RIGHT_12 = "magpieSpriteRight12";
+
+    public static final String MENU_MAGPIE_SPRITE_LEFT_1 = "menuMagpieSpriteLeft1";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_2 = "menuMagpieSpriteLeft2";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_3 = "menuMagpieSpriteLeft3";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_4 = "menuMagpieSpriteLeft4";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_5 = "menuMagpieSpriteLeft5";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_6 = "menuMagpieSpriteLeft6";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_7 = "menuMagpieSpriteLeft7";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_8 = "menuMagpieSpriteLeft8";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_9 = "menuMagpieSpriteLeft9";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_10 = "menuMagpieSpriteLeft10";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_11 = "menuMagpieSpriteLeft11";
+    public static final String MENU_MAGPIE_SPRITE_LEFT_12 = "menuMagpieSpriteLeft12";
+
+
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_1 = "menuMagpieSpriteRight1";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_2 = "menuMagpieSpriteRight2";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_3 = "menuMagpieSpriteRight3";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_4 = "menuMagpieSpriteRight4";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_5 = "menuMagpieSpriteRight5";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_6 = "menuMagpieSpriteRight6";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_7 = "menuMagpieSpriteRight7";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_8 = "menuMagpieSpriteRight8";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_9 = "menuMagpieSpriteRight9";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_10 = "menuMagpieSpriteRight10";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_11 = "menuMagpieSpriteRight11";
+    public static final String MENU_MAGPIE_SPRITE_RIGHT_12 = "menuMagpieSpriteRight12";
+
 
     public static final String[] MAGPIE_SPRITES_LEFT = {
         MAGPIE_SPRITE_LEFT_1,
@@ -59,6 +87,34 @@ public class RegionNames {
         MAGPIE_SPRITE_RIGHT_10,
         MAGPIE_SPRITE_RIGHT_11,
         MAGPIE_SPRITE_RIGHT_12
+    };
+    public static final String[] MENU_MAGPIE_SPRITES_LEFT = {
+        MENU_MAGPIE_SPRITE_LEFT_1,
+        MENU_MAGPIE_SPRITE_LEFT_2,
+        MENU_MAGPIE_SPRITE_LEFT_3,
+        MENU_MAGPIE_SPRITE_LEFT_4,
+        MENU_MAGPIE_SPRITE_LEFT_5,
+        MENU_MAGPIE_SPRITE_LEFT_6,
+        MENU_MAGPIE_SPRITE_LEFT_7,
+        MENU_MAGPIE_SPRITE_LEFT_8,
+        MENU_MAGPIE_SPRITE_LEFT_9,
+        MENU_MAGPIE_SPRITE_LEFT_10,
+        MENU_MAGPIE_SPRITE_LEFT_11,
+        MENU_MAGPIE_SPRITE_LEFT_12
+    };
+    public static final String[] MENU_MAGPIE_SPRITES_RIGHT = {
+        MENU_MAGPIE_SPRITE_RIGHT_4,
+        MENU_MAGPIE_SPRITE_RIGHT_3,
+        MENU_MAGPIE_SPRITE_RIGHT_2,
+        MENU_MAGPIE_SPRITE_RIGHT_1,
+        MENU_MAGPIE_SPRITE_RIGHT_8,
+        MENU_MAGPIE_SPRITE_RIGHT_7,
+        MENU_MAGPIE_SPRITE_RIGHT_6,
+        MENU_MAGPIE_SPRITE_RIGHT_5,
+        MENU_MAGPIE_SPRITE_RIGHT_12,
+        MENU_MAGPIE_SPRITE_RIGHT_11,
+        MENU_MAGPIE_SPRITE_RIGHT_10,
+        MENU_MAGPIE_SPRITE_RIGHT_9
     };
 
 
