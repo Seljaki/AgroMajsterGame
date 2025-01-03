@@ -110,7 +110,6 @@ public class MapScreen extends ScreenAdapter {
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
-        inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(new InputAdapter(){
             float deltaX;
             float deltaY;
@@ -160,6 +159,7 @@ public class MapScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        super.render(delta);
         ScreenUtils.clear(0, 0, 0, 1);
 
         handleInput();
@@ -205,8 +205,19 @@ public class MapScreen extends ScreenAdapter {
     }
 
     @Override
+    public void hide() {
+        super.hide();
+        Gdx.input.setInputProcessor(null);
+        stage.clear();
+    }
+
+    @Override
     public void dispose() {
         shapeRenderer.dispose();
+        stage.dispose();
+        tiledMap.dispose();
+        for(Texture mapTile : mapTiles)
+            mapTile.dispose();
     }
 
     private void handleInput() {
@@ -282,8 +293,9 @@ public class MapScreen extends ScreenAdapter {
                 if(Objects.equals(selectedPlot.plotNumber, "649/16")){
                     game.setScreen(new DuckHuntMagpieSettings(game));
                 }else{
-                    System.out.println("Play Game clicked!");
+                    game.setScreen(new WhackAMoleScreen(game));
                 }
+
             }
         });
 

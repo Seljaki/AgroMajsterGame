@@ -2,7 +2,6 @@ package com.seljaki.AgroMajsterGame.assets;
 
 public class RegionNames {
 
-    // gameplay.atlas
     public static final String BG_DG = "duckMagpieGameBg";
     public static final String SCOPE = "scope";
     public static final String MAGPIE_SPRITE_LEFT_1 = "magpieSpriteLeft1";
@@ -114,6 +113,12 @@ public class RegionNames {
         MENU_MAGPIE_SPRITE_RIGHT_10,
         MENU_MAGPIE_SPRITE_RIGHT_9
     };
+    //public static final String EXAMPLE = "example";
+    public static final String MOLE1 = "mole1";
+    public static final String MOLE2 = "mole2";
+    public static final String MOLEHILL_BACK = "molehillBack";
+    public static final String MOLEHILL_FRONT = "molehillFront";
+    public static final String GRASSY_BACKGROUND = "grassyBackground";
 
     private RegionNames() {
     }
