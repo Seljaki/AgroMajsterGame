@@ -11,37 +11,23 @@ ammo
   orig: 512, 512
   offset: 0, 0
   index: -1
-continue1
+back
   rotate: false
-  xy: 5860, 5167
-  size: 94, 30
-  orig: 94, 30
+  xy: 7954, 6630
+  size: 42, 42
+  orig: 42, 42
   offset: 0, 0
   index: -1
-continue2
+backHover
   rotate: false
-  xy: 625, 94
-  size: 94, 30
-  orig: 94, 30
-  offset: 0, 0
-  index: -1
-continue3
-  rotate: false
-  xy: 2542, 2626
-  size: 94, 30
-  orig: 94, 30
-  offset: 0, 0
-  index: -1
-crosshair
-  rotate: false
-  xy: 4753, 4619
-  size: 512, 512
-  orig: 512, 512
+  xy: 1247, 480
+  size: 42, 42
+  orig: 42, 42
   offset: 0, 0
   index: -1
 crow
   rotate: false
-  xy: 5267, 4642
+  xy: 4753, 4619
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
@@ -55,9 +41,37 @@ duckMagpieGameBg
   index: -1
 heart
   rotate: false
-  xy: 7954, 6655
+  xy: 5860, 5180
   size: 17, 17
   orig: 17, 17
+  offset: 0, 0
+  index: -1
+home
+  rotate: false
+  xy: 625, 552
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+homeHover
+  rotate: false
+  xy: 2727, 3485
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+leaderboard
+  rotate: false
+  xy: 4055, 4242
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+leaderboardHover
+  rotate: false
+  xy: 3428, 4287
+  size: 42, 42
+  orig: 42, 42
   offset: 0, 0
   index: -1
 magpieSpriteLeft1
@@ -398,7 +412,7 @@ menuMagpieSpriteRight9
   index: -1
 noHeart
   rotate: false
-  xy: 1247, 505
+  xy: 625, 107
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
@@ -419,35 +433,35 @@ playHover
   index: -1
 playText
   rotate: false
-  xy: 3428, 3865
+  xy: 3241, 3440
   size: 98, 42
   orig: 98, 42
   offset: 0, 0
   index: -1
 playTextHover
   rotate: false
-  xy: 4127, 4648
+  xy: 3428, 3865
   size: 98, 42
   orig: 98, 42
   offset: 0, 0
   index: -1
 repeat
   rotate: false
-  xy: 3241, 3398
-  size: 84, 84
-  orig: 84, 84
+  xy: 4127, 4648
+  size: 42, 42
+  orig: 42, 42
   offset: 0, 0
   index: -1
 repeatHover
   rotate: false
-  xy: 6482, 5511
-  size: 84, 84
-  orig: 84, 84
+  xy: 5781, 5112
+  size: 42, 42
+  orig: 42, 42
   offset: 0, 0
   index: -1
 scope
   rotate: false
-  xy: 2028, 2144
+  xy: 5267, 4642
   size: 512, 512
   orig: 512, 512
   offset: 0, 0

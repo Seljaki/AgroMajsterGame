@@ -22,6 +22,10 @@ public class AssetDescriptors {
         new AssetDescriptor<>(AssetPaths.RELOAD_SOUND, Sound.class);
     public static final AssetDescriptor<Sound>  SELECT_SOUND =
         new AssetDescriptor<>(AssetPaths.SELECT_SOUND, Sound.class);
+    public static final AssetDescriptor<Sound>  GAME_OVER_SOUND =
+        new AssetDescriptor<>(AssetPaths.GAME_OVER_SOUND, Sound.class);
+    public static final AssetDescriptor<Sound>  SCORE_SOUND =
+        new AssetDescriptor<>(AssetPaths.SCORE_SOUND, Sound.class);
     public static final AssetDescriptor<Sound> EMPTY_GUN_SHOT =
         new AssetDescriptor<>(AssetPaths.EMPTY_GUN_SHOT, Sound.class);
     private AssetDescriptors() {

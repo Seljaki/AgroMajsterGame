@@ -33,6 +33,7 @@ import com.seljaki.AgroMajsterGame.utils.ZoomXY;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MapScreen extends ScreenAdapter {
     private ShapeRenderer shapeRenderer;
@@ -258,8 +259,11 @@ public class MapScreen extends ScreenAdapter {
         playGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new DuckHuntMagpieSettings(game));
-                System.out.println("Play Game clicked!");
+                if(Objects.equals(selectedPlot.plotNumber, "649/16")){
+                    game.setScreen(new DuckHuntMagpieSettings(game));
+                }else{
+                    System.out.println("Play Game clicked!");
+                }
             }
         });
 

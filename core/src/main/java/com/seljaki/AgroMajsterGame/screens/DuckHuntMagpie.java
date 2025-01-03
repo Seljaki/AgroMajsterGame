@@ -3,15 +3,14 @@ package com.seljaki.AgroMajsterGame.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
@@ -22,9 +21,7 @@ import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.AssetPaths;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
-import okhttp3.internal.http2.Settings;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Random;
 
 public class DuckHuntMagpie extends ScreenAdapter {
@@ -39,7 +36,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private final Sound gunShot;
     private final Sound emptyGunShot;
     private final Sound reloadSound;
-    private int lives = 30;
+    private int lives = 3;
     private boolean gameOver = false;
     private boolean showReloadMessage = false;
     private float reloadMessageTimer = 100f;
@@ -51,7 +48,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private int maxBirdsAtOnce;
     private float birdBaseSpeed;
     private ShapeRenderer shapeRenderer;
-    private final float magpieScale = 0.4f;
+    private float magpieScale = 0.19f;
     private float spawnTimer = 0f;
     private float spawnInterval = 2f;
     private final Array<MagpieBird> activeBirds = new Array<>();
@@ -60,13 +57,15 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private SpriteBatch batch;
     private Random random;
     private float crosshairX, crosshairY;
-    private int ammo = 6;
     private int score = 0;
     private final String difficulty;
-    private int screenWidth, screenHeight;
     private final Array<TextureRegion> framesLeft = new Array<>();
     private final Array<TextureRegion> framesRight = new Array<>();
-    float heartSize = 50;
+    float heartSize = 25;
+    private int maxAmmo;
+    private int ammo = 6;
+    private final Sound gameOverSound;
+    //private final Sound scoreSound;
 
     public DuckHuntMagpie(SeljakiMain game) {
         this.game = game;
@@ -76,6 +75,8 @@ public class DuckHuntMagpie extends ScreenAdapter {
         gunShot = assetManager.get(AssetDescriptors.GUN_SHOT);
         emptyGunShot = assetManager.get(AssetDescriptors.EMPTY_GUN_SHOT);
         reloadSound = assetManager.get(AssetDescriptors.RELOAD_SOUND);
+        gameOverSound = assetManager.get(AssetDescriptors.GAME_OVER_SOUND);
+        //scoreSound = assetManager.get(AssetDescriptors.SCORE_SOUND);
         difficulty = GameManager.INSTANCE.getDifficulty();
     }
 
@@ -88,18 +89,27 @@ public class DuckHuntMagpie extends ScreenAdapter {
 
         switch (difficulty) {
             case "Medium":
+                magpieScale = 0.22f;
                 maxBirdsAtOnce = 20;
                 birdBaseSpeed = 200f;
                 spawnInterval = 0.7f;
+                maxAmmo = 8;
+                ammo = 8;
                 break;
             case "Hard":
+                magpieScale = 0.18f;
                 maxBirdsAtOnce = 30;
                 birdBaseSpeed = 250f;
-                spawnInterval = 0.15f;
+                spawnInterval = 0.4f;
+                maxAmmo = 6;
+                ammo = 6;
                 break;
             default:
+                magpieScale = 0.26f;
                 maxBirdsAtOnce = 5;
                 birdBaseSpeed = 150f;
+                maxAmmo = 10;
+                ammo = 10;
         }
 
         random = new Random();
@@ -120,20 +130,24 @@ public class DuckHuntMagpie extends ScreenAdapter {
         magpieAnimationRight = new Animation<>(0.1f, framesRight, Animation.PlayMode.LOOP);
 
         crosshairRegion = gameplayAtlas.findRegion(RegionNames.SCOPE);
-        float scopeScale = 0.15f;
+        float scopeScale = 0.05f;
         scopeWidth = crosshairRegion.getRegionWidth() * scopeScale;
         scopeHeight = crosshairRegion.getRegionHeight() * scopeScale;
 
-        Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.None);
+        Gdx.graphics.setSystemCursor(Cursor.SystemCursor.None);
     }
 
     @Override
     public void render(float delta) {
-        screenWidth = viewport.getScreenWidth();
-        screenHeight = viewport.getScreenHeight();
-        System.out.println(screenWidth + " : " + screenHeight);
+        viewport.apply();
+        float screenWidth = viewport.getWorldWidth();
+        float screenHeight = viewport.getWorldHeight();
+        //System.out.println(screenWidth + " : " + screenHeight);
         Gdx.gl.glClearColor(0, 0.6f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.setProjectionMatrix(viewport.getCamera().combined);
+        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 
         if(gameOver){
             game.setScreen(new DuckHuntMagpieGameOverScreen(game, score));
@@ -141,8 +155,10 @@ public class DuckHuntMagpie extends ScreenAdapter {
 
         handleInput();
 
-        crosshairX = Gdx.input.getX() - scopeWidth / 2f;
-        crosshairY = (screenHeight - Gdx.input.getY()) - scopeHeight / 2f;
+        Vector3 tmp = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        viewport.getCamera().unproject(tmp);
+        crosshairX = tmp.x - scopeWidth/2f;
+        crosshairY = tmp.y - scopeHeight/2f;
 
        if(!paused){
            if (showReloadMessage) {
@@ -157,7 +173,6 @@ public class DuckHuntMagpie extends ScreenAdapter {
                //System.out.println("IN");
                spawnBird();
                spawnTimer = 0f;
-               spawnInterval = 1f + random.nextFloat() * 2f;
            }
 
            for (int i = activeBirds.size - 1; i >= 0; i--) {
@@ -169,12 +184,14 @@ public class DuckHuntMagpie extends ScreenAdapter {
                    activeBirds.removeIndex(i);
                    lives = Math.max(0, lives - 1);
                    if (lives == 0) {
+                       gameOverSound.play();
                        gameOver = true;
                    }
                } else if (!bird.flyingLeftToRight && bird.x > screenWidth + 100) {
                    activeBirds.removeIndex(i);
                    lives = Math.max(0, lives - 1);
                    if (lives == 0) {
+                       gameOverSound.play();
                        gameOver = true;
                    }
                }
@@ -203,26 +220,30 @@ public class DuckHuntMagpie extends ScreenAdapter {
         batch.draw(crosshairRegion, crosshairX, crosshairY, scopeWidth, scopeHeight);
 
         BitmapFont ammoFont = assetManager.get(AssetDescriptors.GAME_FONT);
+        ammoFont.getData().setScale(0.5f);
         ammoFont.setColor(Color.BLACK);
-        float scoreX = 20;
-        float scoreY = screenHeight - 90;
+
+        GlyphLayout layoutScore = new GlyphLayout(ammoFont, "" + score);
         Image scoreImage = new Image(gameplayAtlas.findRegion("crow"));
-        scoreImage.setSize(90,90);
+        scoreImage.setSize(40,40);
+        float scoreX = scoreImage.getWidth() + 20f;
+        float scoreY = screenHeight - 42f;
         scoreImage.setPosition(scoreX, scoreY);
         scoreImage.draw(batch, 1);
-        ammoFont.draw(batch, "" + score, scoreX + scoreImage.getWidth() + 10, scoreY + scoreImage.getHeight() / 2);
-        float ammoX = screenWidth - 120;
-        float ammoY = screenHeight - 90;
+        float sx = 20f;
+        float sy = screenHeight - 20f;
+        ammoFont.draw(batch, layoutScore, sx, sy);
 
+        GlyphLayout layoutAmmo = new GlyphLayout(ammoFont, "" + ammo);
         Image ammoImage = new Image(gameplayAtlas.findRegion("ammo"));
-        ammoImage.setSize(70,70);
+        ammoImage.setSize(30,30);
+        float ammoX = (screenWidth - layoutAmmo.width - ammoImage.getWidth()) - 20f;
+        float ammoY = screenHeight -ammoImage.getHeight() - 5;
         ammoImage.setPosition(ammoX, ammoY);
         ammoImage.draw(batch, 1);
-        BitmapFont font = new BitmapFont();
-        font.setColor(new Color(Color.BLACK));
-        font.getData().setScale(3f);
-
-        ammoFont.draw(batch, "" + ammo, ammoX + ammoImage.getWidth() + 10, ammoY + ammoImage.getHeight() / 2);
+        float ax = (screenWidth - layoutAmmo.width) - 20f;
+        float ay = screenHeight - 20f;
+        ammoFont.draw(batch, layoutAmmo, ax, ay);
 
         GlyphLayout layoutPause = new GlyphLayout();
         String pauseMessage;
@@ -230,15 +251,19 @@ public class DuckHuntMagpie extends ScreenAdapter {
             pauseMessage = "Pause [P]";
         }else{
            pauseMessage = "Resume [P]";
-            BitmapFont homeFont = skin.getFont("window");
-            GlyphLayout layoutHome = new GlyphLayout(homeFont, "Home [H]");
-            float hx = (screenWidth - layoutHome.width) / 2f;
-            float hy =  (float) screenHeight /20f;
-            homeFont.draw(batch, layoutHome, hx, hy);
+           BitmapFont homeFont = skin.getFont("window");
+           homeFont.getData().setScale(0.7f);
+           GlyphLayout layoutHome = new GlyphLayout(homeFont, "Home [H]");
+           float hx = (screenWidth - layoutHome.width) / 2f;
+           float hy = screenHeight /22f;
+           homeFont.getData().setScale(0.7f);
+           homeFont.draw(batch, layoutHome, hx, hy);
         }
         layoutPause.setText(skin.getFont("window"), pauseMessage);
         float xPause = (screenWidth - layoutPause.width) /2;
-        skin.getFont("window").draw(batch,layoutPause, xPause, (float) screenHeight /14);
+        BitmapFont pausedFont = skin.getFont("window");
+        pausedFont.getData().setScale(0.7f);
+        pausedFont.draw(batch,layoutPause, xPause, screenHeight /14);
 
         if (showReloadMessage) {
             messageFont.setColor(1, 0, 0, 1);
@@ -247,7 +272,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
             layout.setText(messageFont, message);
             float textWidth = layout.width;
             float x = (screenWidth - textWidth) / 2;
-            float y = (float) screenHeight /4;
+            float y = screenHeight /4;
             messageFont.draw(batch, layout, x, y);
         }
         for (int i = 0; i < 3; i++) {
@@ -268,8 +293,6 @@ public class DuckHuntMagpie extends ScreenAdapter {
         }
 
         batch.end();
-
-
         shapeRenderer.end();
 
     }
@@ -286,6 +309,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
                     gunShot.play();
                     for (int i = activeBirds.size - 1; i >= 0; i--) {
                         if (isMagpieHit(activeBirds.get(i))) {
+                            //scoreSound.play();
                             score++;
                             if(spawnInterval > 0.03f){
                                 spawnInterval -= 0.01f;
@@ -303,8 +327,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
                 reloadSound.play();
-                int MAX_AMMO = 6;
-                ammo = MAX_AMMO;
+                ammo = maxAmmo;
             }
         }else{
             if(Gdx.input.isKeyJustPressed(Input.Keys.H)){
@@ -321,14 +344,14 @@ public class DuckHuntMagpie extends ScreenAdapter {
         boolean leftToRight = random.nextBoolean();
         float startX, chosenSpeed;
         if (leftToRight) {
-            startX = viewport.getScreenWidth() + viewport.getScreenWidth()/6.4f;
+            startX = viewport.getWorldWidth() + viewport.getWorldWidth()/6.4f;
             chosenSpeed = -birdBaseSpeed;
         } else {
-            startX = -(screenWidth/6.4f);
+            startX = -(viewport.getWorldWidth()/6.4f);
             chosenSpeed = birdBaseSpeed;
         }
 
-        float startY = random.nextFloat() * (viewport.getScreenHeight() - 200) + 50;
+        float startY = random.nextFloat() * (viewport.getWorldHeight() - 200) + 50;
         MagpieBird newBird = new MagpieBird(startX, startY, chosenSpeed, leftToRight);
         activeBirds.add(newBird);
     }
@@ -363,7 +386,6 @@ public class DuckHuntMagpie extends ScreenAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-        // Sprosti sličice
         for (TextureRegion reg : magpieAnimationLeft.getKeyFrames()) {
             reg.getTexture().dispose();
         }
