@@ -1,4 +1,4 @@
-package com.seljaki.AgroMajsterGame;
+package com.seljaki.AgroMajsterGame.Helpers;
 
 public class MagpieBird {
     public float x;

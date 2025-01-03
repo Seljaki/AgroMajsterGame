@@ -1,4 +1,4 @@
-package com.seljaki.AgroMajsterGame.screens;
+package com.seljaki.AgroMajsterGame.screens.WhackAMole;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
+import com.seljaki.AgroMajsterGame.screens.MapScreen;
 
 import java.util.HashMap;
 import java.util.Map;

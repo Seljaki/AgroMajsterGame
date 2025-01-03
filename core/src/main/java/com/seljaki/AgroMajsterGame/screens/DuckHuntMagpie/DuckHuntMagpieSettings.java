@@ -1,4 +1,4 @@
-package com.seljaki.AgroMajsterGame.screens;
+package com.seljaki.AgroMajsterGame.screens.DuckHuntMagpie;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -14,8 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.seljaki.AgroMajsterGame.*;
+import com.seljaki.AgroMajsterGame.Helpers.AnimatedActor;
+import com.seljaki.AgroMajsterGame.Helpers.GameButton;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
+import com.seljaki.AgroMajsterGame.screens.MapScreen;
 
 public class DuckHuntMagpieSettings extends ScreenAdapter {
     private Stage stage;

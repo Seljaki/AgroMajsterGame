@@ -1,4 +1,4 @@
-package com.seljaki.AgroMajsterGame.screens;
+package com.seljaki.AgroMajsterGame.screens.DuckHuntMagpie;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.seljaki.AgroMajsterGame.GameManager;
-import com.seljaki.AgroMajsterGame.MagpieBird;
+import com.seljaki.AgroMajsterGame.Helpers.MagpieBird;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.AssetPaths;
