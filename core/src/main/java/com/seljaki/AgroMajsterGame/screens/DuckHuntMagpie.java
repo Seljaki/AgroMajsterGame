@@ -113,8 +113,8 @@ public class DuckHuntMagpie extends ScreenAdapter {
         }
 
         random = new Random();
-        heartFull = new TextureRegion(gameplayAtlas.findRegion("heart"));
-        heartEmpty = new TextureRegion(gameplayAtlas.findRegion("noHeart"));
+        heartFull = new TextureRegion(gameplayAtlas.findRegion(RegionNames.HEART));
+        heartEmpty = new TextureRegion(gameplayAtlas.findRegion(RegionNames.NO_HEART));
 
         for (String magpieSpriteName : RegionNames.MAGPIE_SPRITES_LEFT) {
             TextureRegion tex = gameplayAtlas.findRegion(magpieSpriteName);
@@ -224,7 +224,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         ammoFont.setColor(Color.BLACK);
 
         GlyphLayout layoutScore = new GlyphLayout(ammoFont, "" + score);
-        Image scoreImage = new Image(gameplayAtlas.findRegion("crow"));
+        Image scoreImage = new Image(gameplayAtlas.findRegion(RegionNames.CROW));
         scoreImage.setSize(40,40);
         float scoreX = scoreImage.getWidth() + 20f;
         float scoreY = screenHeight - 42f;
@@ -235,7 +235,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         ammoFont.draw(batch, layoutScore, sx, sy);
 
         GlyphLayout layoutAmmo = new GlyphLayout(ammoFont, "" + ammo);
-        Image ammoImage = new Image(gameplayAtlas.findRegion("ammo"));
+        Image ammoImage = new Image(gameplayAtlas.findRegion(RegionNames.AMMO));
         ammoImage.setSize(30,30);
         float ammoX = (screenWidth - layoutAmmo.width - ammoImage.getWidth()) - 20f;
         float ammoY = screenHeight -ammoImage.getHeight() - 5;
@@ -268,7 +268,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         if (showReloadMessage) {
             messageFont.setColor(1, 0, 0, 1);
             GlyphLayout layout = new GlyphLayout();
-            String message = "must reload [R]";
+            String message = "MUST RELOAD! [R]";
             layout.setText(messageFont, message);
             float textWidth = layout.width;
             float x = (screenWidth - textWidth) / 2;
@@ -311,8 +311,8 @@ public class DuckHuntMagpie extends ScreenAdapter {
                         if (isMagpieHit(activeBirds.get(i))) {
                             //scoreSound.play();
                             score++;
-                            if(spawnInterval > 0.03f){
-                                spawnInterval -= 0.01f;
+                            if(spawnInterval > 0.05f){
+                                spawnInterval -= 0.003f;
                             }
                             activeBirds.removeIndex(i);
                             break;

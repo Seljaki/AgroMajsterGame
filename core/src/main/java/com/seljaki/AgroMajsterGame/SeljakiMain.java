@@ -41,11 +41,11 @@ public class SeljakiMain extends Game {
         seljakiClient = SeljakiClient.loadData();
         assetManager = new AssetManager();
         assetManager.load(AssetDescriptors.GAMEPLAY);
-        assetManager.load(AssetDescriptors.SKIN);
+        assetManager.load(AssetDescriptors.UI_SKIN);
         assetManager.finishLoading();
 
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
-        skin = assetManager.get(AssetDescriptors.SKIN);
+        skin = assetManager.get(AssetDescriptors.UI_SKIN);
         if(seljakiClient.isLoggedIn())
             setScreen(new MapScreen(this));
         else

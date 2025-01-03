@@ -27,7 +27,6 @@ public class AssetDescriptors {
         new AssetDescriptor<>(AssetPaths.SCORE_SOUND, Sound.class);
     public static final AssetDescriptor<Sound> EMPTY_GUN_SHOT =
         new AssetDescriptor<>(AssetPaths.EMPTY_GUN_SHOT, Sound.class);
-
     public static final AssetDescriptor<Sound> MOLE_SQUEAK_SOUND = new AssetDescriptor<Sound>(AssetPaths.MOLE_SQUEAK_SOUND, Sound.class);
     public static final AssetDescriptor<Music> WHACK_A_MOLE_MUSIC = new AssetDescriptor<Music>(AssetPaths.WHACK_A_MOLE_MUSIC, Music.class);
 

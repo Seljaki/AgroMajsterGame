@@ -76,13 +76,13 @@ public class DuckHuntMagpieGameOverScreen extends ScreenAdapter {
         stats.setWrap(true);
         stats.setAlignment(Align.center);
         table.add(stats).pad(0).colspan(3).expand().growX().row();
-        table.add(buttons.getGameButton("home","homeHover",
+        table.add(buttons.getGameButton(RegionNames.HOME,RegionNames.HOME_HOVER,
                 () -> new DuckHuntMagpieSettings(game)
             )).padBottom(20).expand().padRight(20).right();
-        table.add(buttons.getGameButton("repeat","repeatHover",
+        table.add(buttons.getGameButton(RegionNames.REPEAT,RegionNames.REPEAT_HOVER,
             () -> new DuckHuntMagpie(game) // TODO: TUKAJ SE DODA LEADERBOARD SCREEN
         )).padBottom(20);
-        table.add(buttons.getGameButton("leaderboard", "leaderboardHover",
+        table.add(buttons.getGameButton(RegionNames.LEADERBOARD, RegionNames.LEADERBOARD_HOVER,
             () -> new DuckHuntMagpie(game)
         )).padBottom(20).expand().padLeft(20).left().row();
     }

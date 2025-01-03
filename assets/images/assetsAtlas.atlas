@@ -6,462 +6,497 @@ filter: Nearest, Nearest
 repeat: none
 ammo
   rotate: false
-  xy: 2727, 2970
+  xy: 4748, 4577
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 back
   rotate: false
-  xy: 7954, 6630
+  xy: 625, 90
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 backHover
   rotate: false
-  xy: 1247, 480
+  xy: 1247, 488
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 crow
   rotate: false
-  xy: 4753, 4619
+  xy: 5262, 4600
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 duckMagpieGameBg
   rotate: false
-  xy: 2, 5133
+  xy: 2, 5091
   size: 5230, 2868
   orig: 5230, 2868
   offset: 0, 0
   index: -1
+grassyBackground
+  rotate: false
+  xy: 701, 874
+  size: 640, 480
+  orig: 640, 480
+  offset: 0, 0
+  index: -1
 heart
   rotate: false
-  xy: 5860, 5180
+  xy: 5234, 5095
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 home
   rotate: false
-  xy: 625, 552
+  xy: 2727, 3000
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 homeHover
   rotate: false
-  xy: 2727, 3485
+  xy: 3349, 3398
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 leaderboard
   rotate: false
-  xy: 4055, 4242
+  xy: 2727, 3443
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 leaderboardHover
   rotate: false
-  xy: 3428, 4287
+  xy: 3428, 3788
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 magpieSpriteLeft1
   rotate: false
-  xy: 1400, 2181
+  xy: 1400, 2139
   size: 626, 544
   orig: 626, 544
   offset: 0, 0
   index: -1
 magpieSpriteLeft10
   rotate: false
-  xy: 5234, 5156
+  xy: 5234, 5114
   size: 624, 439
   orig: 624, 439
   offset: 0, 0
   index: -1
 magpieSpriteLeft11
   rotate: false
-  xy: 6632, 5872
+  xy: 6632, 5830
   size: 697, 525
   orig: 697, 525
   offset: 0, 0
   index: -1
 magpieSpriteLeft12
   rotate: false
-  xy: 7331, 6674
+  xy: 7331, 6632
   size: 697, 525
   orig: 697, 525
   offset: 0, 0
   index: -1
 magpieSpriteLeft2
   rotate: false
-  xy: 701, 524
+  xy: 3497, 4209
   size: 625, 375
   orig: 625, 375
   offset: 0, 0
   index: -1
 magpieSpriteLeft3
   rotate: false
-  xy: 2798, 3484
+  xy: 701, 532
   size: 626, 340
   orig: 626, 340
   offset: 0, 0
   index: -1
 magpieSpriteLeft4
   rotate: false
-  xy: 2798, 3826
+  xy: 2798, 3784
   size: 628, 503
   orig: 628, 503
   offset: 0, 0
   index: -1
 magpieSpriteLeft5
   rotate: false
-  xy: 701, 901
+  xy: 1400, 1642
   size: 619, 495
   orig: 619, 495
   offset: 0, 0
   index: -1
 magpieSpriteLeft6
   rotate: false
-  xy: 7331, 6166
+  xy: 7331, 6124
   size: 621, 506
   orig: 621, 506
   offset: 0, 0
   index: -1
 magpieSpriteLeft7
   rotate: false
-  xy: 5860, 5199
+  xy: 625, 134
   size: 620, 396
   orig: 620, 396
   offset: 0, 0
   index: -1
 magpieSpriteLeft8
   rotate: false
-  xy: 7331, 5826
+  xy: 7331, 5784
   size: 621, 338
   orig: 621, 338
   offset: 0, 0
   index: -1
 magpieSpriteLeft9
   rotate: false
-  xy: 6632, 5547
+  xy: 6632, 5505
   size: 616, 323
   orig: 616, 323
   offset: 0, 0
   index: -1
 magpieSpriteRight1
   rotate: false
-  xy: 2099, 2983
+  xy: 2099, 2941
   size: 626, 544
   orig: 626, 544
   offset: 0, 0
   index: -1
 magpieSpriteRight10
   rotate: false
-  xy: 4127, 4692
+  xy: 5860, 5114
   size: 624, 439
   orig: 624, 439
   offset: 0, 0
   index: -1
 magpieSpriteRight11
   rotate: false
-  xy: 2, 596
+  xy: 2, 554
   size: 697, 525
   orig: 697, 525
   offset: 0, 0
   index: -1
 magpieSpriteRight12
   rotate: false
-  xy: 701, 1398
+  xy: 701, 1356
   size: 697, 525
   orig: 697, 525
   offset: 0, 0
   index: -1
 magpieSpriteRight2
   rotate: false
-  xy: 3428, 3909
+  xy: 3428, 3832
   size: 625, 375
   orig: 625, 375
   offset: 0, 0
   index: -1
 magpieSpriteRight3
   rotate: false
-  xy: 3497, 4286
+  xy: 2798, 3442
   size: 626, 340
   orig: 626, 340
   offset: 0, 0
   index: -1
 magpieSpriteRight4
   rotate: false
-  xy: 3497, 4628
+  xy: 3497, 4586
   size: 628, 503
   orig: 628, 503
   offset: 0, 0
   index: -1
 magpieSpriteRight5
   rotate: false
-  xy: 1400, 1684
+  xy: 4127, 4594
   size: 619, 495
   orig: 619, 495
   offset: 0, 0
   index: -1
 magpieSpriteRight6
   rotate: false
-  xy: 2, 88
+  xy: 2, 46
   size: 621, 506
   orig: 621, 506
   offset: 0, 0
   index: -1
 magpieSpriteRight7
   rotate: false
-  xy: 625, 126
+  xy: 2727, 3044
   size: 620, 396
   orig: 620, 396
   offset: 0, 0
   index: -1
 magpieSpriteRight8
   rotate: false
-  xy: 1400, 1344
+  xy: 1400, 1302
   size: 621, 338
   orig: 621, 338
   offset: 0, 0
   index: -1
 magpieSpriteRight9
   rotate: false
-  xy: 2099, 2658
+  xy: 1343, 977
   size: 616, 323
   orig: 616, 323
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft1
   rotate: false
-  xy: 2, 4331
+  xy: 2, 4289
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft10
   rotate: false
-  xy: 5234, 5597
+  xy: 5234, 5555
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft11
   rotate: false
-  xy: 5933, 6399
+  xy: 5933, 6357
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft12
   rotate: false
-  xy: 6632, 7201
+  xy: 6632, 7159
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft2
   rotate: false
-  xy: 5234, 7201
+  xy: 5234, 7159
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft3
   rotate: false
-  xy: 2, 3529
+  xy: 2, 3487
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft4
   rotate: false
-  xy: 701, 4331
+  xy: 701, 4289
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft5
   rotate: false
-  xy: 5234, 6399
+  xy: 5234, 6357
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft6
   rotate: false
-  xy: 5933, 7201
+  xy: 5933, 7159
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft7
   rotate: false
-  xy: 2, 2727
+  xy: 2, 2685
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft8
   rotate: false
-  xy: 701, 3529
+  xy: 701, 3487
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteLeft9
   rotate: false
-  xy: 1400, 4331
+  xy: 1400, 4289
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight1
   rotate: false
-  xy: 2, 1925
+  xy: 2, 1883
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight10
   rotate: false
-  xy: 1400, 2727
+  xy: 1400, 2685
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight11
   rotate: false
-  xy: 2099, 3529
+  xy: 2099, 3487
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight12
   rotate: false
-  xy: 2798, 4331
+  xy: 2798, 4289
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight2
   rotate: false
-  xy: 701, 2727
+  xy: 701, 2685
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight3
   rotate: false
-  xy: 1400, 3529
+  xy: 1400, 3487
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight4
   rotate: false
-  xy: 2099, 4331
+  xy: 2099, 4289
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight5
   rotate: false
-  xy: 5933, 5597
+  xy: 5933, 5555
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight6
   rotate: false
-  xy: 6632, 6399
+  xy: 6632, 6357
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight7
   rotate: false
-  xy: 7331, 7201
+  xy: 7331, 7159
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight8
   rotate: false
-  xy: 2, 1123
+  xy: 2, 1081
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
 menuMagpieSpriteRight9
   rotate: false
-  xy: 701, 1925
+  xy: 701, 1883
   size: 697, 800
   orig: 697, 800
   offset: 0, 0
   index: -1
+mole1
+  rotate: false
+  xy: 6486, 5516
+  size: 30, 37
+  orig: 30, 37
+  offset: 0, 0
+  index: -1
+mole2
+  rotate: false
+  xy: 7250, 5791
+  size: 30, 37
+  orig: 30, 37
+  offset: 0, 0
+  index: -1
+molehillBack
+  rotate: false
+  xy: 2028, 2633
+  size: 60, 50
+  orig: 60, 50
+  offset: 0, 0
+  index: -1
+molehillFront
+  rotate: false
+  xy: 7954, 6580
+  size: 60, 50
+  orig: 60, 50
+  offset: 0, 0
+  index: -1
 noHeart
   rotate: false
-  xy: 625, 107
+  xy: 5262, 4581
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 play
   rotate: false
-  xy: 8030, 7917
+  xy: 8030, 7875
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 playHover
   rotate: false
-  xy: 2, 2
+  xy: 2099, 2855
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 playText
   rotate: false
-  xy: 3241, 3440
+  xy: 2, 2
   size: 98, 42
   orig: 98, 42
   offset: 0, 0
   index: -1
 playTextHover
   rotate: false
-  xy: 3428, 3865
+  xy: 6290, 5070
   size: 98, 42
   orig: 98, 42
   offset: 0, 0
   index: -1
 repeat
   rotate: false
-  xy: 4127, 4648
+  xy: 4055, 4165
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 repeatHover
   rotate: false
-  xy: 5781, 5112
+  xy: 3428, 4245
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 scope
   rotate: false
-  xy: 5267, 4642
+  xy: 5776, 4600
   size: 512, 512
   orig: 512, 512
   offset: 0, 0

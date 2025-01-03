@@ -101,13 +101,13 @@ public class DuckHuntMagpieSettings extends ScreenAdapter {
         table.add(chooseDifficultySelectBox).top().center();
         table.add(leftMagpieActor).pad(10);
         table.row();
-        table.add(buttons.getGameButton("back","backHover",
+        table.add(buttons.getGameButton(RegionNames.BACK,RegionNames.BACK_HOVER,
             () -> new MapScreen(game)
         )).padBottom(20).right().expandY();
-        table.add(buttons.getGameButton("playText","playTextHover",
+        table.add(buttons.getGameButton(RegionNames.PLAY_TEXT,RegionNames.PLAY_TEXT_HOVER,
             () -> new DuckHuntMagpie(game)
             )).padBottom(20).expandY();
-        table.add(buttons.getGameButton("leaderboard","leaderboardHover",
+        table.add(buttons.getGameButton(RegionNames.LEADERBOARD,RegionNames.LEADERBOARD_HOVER,
             () -> new DuckHuntMagpie(game) // TODO: TUKAJ SE DODA LEADERBOARD SCREEN
         )).padBottom(20).left().expandY().row();
     }

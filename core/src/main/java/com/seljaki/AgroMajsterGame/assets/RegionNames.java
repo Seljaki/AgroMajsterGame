@@ -55,6 +55,22 @@ public class RegionNames {
     public static final String MENU_MAGPIE_SPRITE_RIGHT_10 = "menuMagpieSpriteRight10";
     public static final String MENU_MAGPIE_SPRITE_RIGHT_11 = "menuMagpieSpriteRight11";
     public static final String MENU_MAGPIE_SPRITE_RIGHT_12 = "menuMagpieSpriteRight12";
+    public static final String AMMO = "ammo";
+    public static final String BACK = "back";
+    public static final String BACK_HOVER = "backHover";
+    public static final String CROW = "crow";
+    public static final String HEART = "heart";
+    public static final String HOME = "home";
+    public static final String HOME_HOVER = "homeHover";
+    public static final String LEADERBOARD = "leaderboard";
+    public static final String LEADERBOARD_HOVER = "leaderboardHover";
+    public static final String NO_HEART=  "noHeart";
+    public static final String PLAY = "play";
+    public static final String PLAY_TEXT = "playText";
+    public static final String PLAY_TEXT_HOVER = "playTextHover";
+    public static final String REPEAT = "repeat";
+    public static final String REPEAT_HOVER= "repeatHover";
+
 
 
     public static final String[] MAGPIE_SPRITES_LEFT = {
