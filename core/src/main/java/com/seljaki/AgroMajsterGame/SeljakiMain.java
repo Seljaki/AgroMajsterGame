@@ -31,11 +31,9 @@ public class SeljakiMain extends Game {
     public TextureAtlas gameplayAtlas;
     public Sound moleSqueak;
     public Music whackAMoleMusic;
-    public ParticleEffect particleEffectMoleBlood;
     @Override
     public void create() {
         viewport = new FitViewport(640, 480);
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 
         batch = new SpriteBatch();
         seljakiClient = SeljakiClient.loadData();

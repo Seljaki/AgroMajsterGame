@@ -22,6 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.http.Plot;
 import com.seljaki.AgroMajsterGame.screens.WhackAMole.WhackAMoleScreen;
@@ -50,20 +54,23 @@ public class MapScreen extends ScreenAdapter {
     private Plot selectedPlot;
     private Stage stage;
     private Skin skin;
+    private Skin testSkin;
     InputMultiplexer inputMultiplexer;
     private Vector2 cameraVelocity = new Vector2(0,0);
 
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
     private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
-
+    private Viewport viewport;
     public MapScreen(SeljakiMain game) {
         this.game = game;
     }
 
     @Override
     public void show() {
-        stage = new Stage(game.viewport);
+        viewport = new FitViewport(1280, 960);
+        stage = new Stage(viewport);
         skin = game.skin;
+        //testSkin =  new Skin(Gdx.files.internal("ui/skin/flat-earth-ui.json"));
         plots = game.seljakiClient.getPlots();
 
         shapeRenderer = new ShapeRenderer();
@@ -307,8 +314,15 @@ public class MapScreen extends ScreenAdapter {
         dialog.setMovable(true);
         dialog.setModal(false);
         dialog.setResizable(false);
-        dialog.setPosition(20, game.viewport.getWorldHeight() - dialog.getHeight() - 20);
+        dialog.setPosition(20, viewport.getWorldHeight() - dialog.getHeight() - 20);
 
         return dialog;
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+
+        viewport.update(width, height);
     }
 }

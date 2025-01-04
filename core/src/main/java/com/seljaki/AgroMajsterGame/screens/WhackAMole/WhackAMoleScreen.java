@@ -74,13 +74,13 @@ public class WhackAMoleScreen extends ScreenAdapter {
         labelStyle.fontColor = Color.BLACK;
 
         switch (difficulty) {
-            case "Medium":
-                totalTime = 30f;
-                moleWaitTime = 2;
-                break;
             case "Hard":
                 totalTime = 15f;
                 moleWaitTime = 1;
+                break;
+            case "Medium":
+                totalTime = 30f;
+                moleWaitTime = 2;
                 break;
             default:
                 totalTime = 45f;
