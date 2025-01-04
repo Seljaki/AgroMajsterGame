@@ -8,16 +8,12 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
@@ -25,7 +21,6 @@ import com.seljaki.AgroMajsterGame.GameManager;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
-import com.seljaki.AgroMajsterGame.screens.MapScreen;
 import com.seljaki.AgroMajsterGame.screens.MiniGameGameOverScreen;
 
 import java.util.HashMap;
@@ -37,7 +32,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private Stage stage;
     private Stage stageFront;
     private Stage stageScore;
-    private final Skin skin;
+    private final BitmapFont gameFont;
     private final Random random;
     private final Map<Image, Boolean> moleHillStateMap;
     private int activeMoles;
@@ -56,6 +51,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private AssetManager assetManager;
     private final String difficulty;
 
+    private Label.LabelStyle labelStyle;
 
     public WhackAMoleScreen(SeljakiMain game) {
         this.game = game;
@@ -64,14 +60,18 @@ public class WhackAMoleScreen extends ScreenAdapter {
         this.activeMoles = 0;
         this.score = 0;
         assetManager = game.getAssetManager();
-        skin = game.skin;
         gameplayAtlas = game.gameplayAtlas;
         moleSqueak = assetManager.get(AssetDescriptors.MOLE_SQUEAK_SOUND);
         gameMusic = assetManager.get(AssetDescriptors.WHACK_A_MOLE_MUSIC);
         gameMusic.setLooping(true);
         particleEffectMoleBlood = assetManager.get(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
         difficulty = GameManager.INSTANCE.getDifficultyMole();
+        gameFont = assetManager.get(AssetDescriptors.GAME_FONT);
+        gameFont.getData().setScale(0.5f);
 
+        labelStyle = new Label.LabelStyle();
+        labelStyle.font = gameFont;
+        labelStyle.fontColor = Color.BLACK;
 
         switch (difficulty) {
             case "Medium":
@@ -163,11 +163,11 @@ public class WhackAMoleScreen extends ScreenAdapter {
             scheduleMolePopUp(molehillBack);
         }
 
-        scoreLabel = new Label("Score: " + score, skin);
+        scoreLabel = new Label("Score: " + score, labelStyle);
         scoreLabel.setPosition(stage.getWidth() / 2 - scoreLabel.getWidth() / 2, stage.getHeight() - 50);
         timerBar = createTimerBar();
 
-        Label timeLabel = new Label("Time: ", skin);
+        Label timeLabel = new Label("Time: ", labelStyle);
         timeLabel.setPosition(5,20);
         timerBar.setPosition(0, 0);
 
