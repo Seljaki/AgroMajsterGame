@@ -21,6 +21,7 @@ import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.AssetPaths;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
+import com.seljaki.AgroMajsterGame.screens.MiniGameGameOverScreen;
 import com.seljaki.AgroMajsterGame.screens.MiniGameSettingsScreen;
 import org.jetbrains.annotations.NotNull;
 import java.util.Random;
@@ -151,7 +152,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 
         if(gameOver){
-            game.setScreen(new DuckHuntMagpieGameOverScreen(game, score));
+            game.setScreen(new MiniGameGameOverScreen(game, score, true));
         }
 
         handleInput();

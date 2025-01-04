@@ -25,6 +25,7 @@ import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
 import com.seljaki.AgroMajsterGame.screens.MapScreen;
+import com.seljaki.AgroMajsterGame.screens.MiniGameGameOverScreen;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,11 +44,9 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private Label scoreLabel;
     private Image timerBar;
     private float timeRemaining;
-    private final float totalTime = 30f;
+    private final float totalTime = 3f;
     TextureRegion mole1Texture;
     TextureRegion mole2Texture;
-
-    private Table resultTable;
     private final TextureAtlas gameplayAtlas;
     private final Sound moleSqueak;
     private final Music gameMusic;
@@ -164,9 +163,9 @@ public class WhackAMoleScreen extends ScreenAdapter {
             @Override
             public void run() {
                 if (timeRemaining <= 0) {
-                    showResultTable();
                     cancel();
-                    return;
+                    gameMusic.stop();
+                    game.setScreen(new MiniGameGameOverScreen(game, score, false));
                 }
                 if (!moleHillStateMap.get(molehillBack) && shouldSpawn()) {
                     Image mole = new Image(mole1Texture);
@@ -269,49 +268,6 @@ public class WhackAMoleScreen extends ScreenAdapter {
         float width = (timeRemaining / totalTime) * stage.getWidth();
         timerBar.setSize(width, timerBar.getHeight());
     }
-
-    private void showResultTable(){
-        if (resultTable != null) {
-            resultTable.remove();
-        }
-        resultTable = new Table();
-        resultTable.setSize(200, 170);
-        resultTable.setBackground(skin.getDrawable("window"));
-        resultTable.setPosition((stageScore.getWidth() - resultTable.getWidth()) / 2,
-            (stageScore.getHeight() - resultTable.getHeight()) / 2);
-
-        Label OverLabel = new Label("Game Over!", skin);
-        Label scoreLabel = new Label("Final Score: " + score, skin);
-        TextButton backButton = new TextButton("Return to map", skin);
-        TextButton againButton = new TextButton("Play Again", skin);
-
-        resultTable.add(OverLabel).pad(10).colspan(2).padBottom(25).row();
-        resultTable.add(scoreLabel).pad(10).colspan(2).row();
-        resultTable.add(againButton).pad(10);
-        resultTable.add(backButton).pad(10).row();
-
-        stageScore.addActor(resultTable);
-        Gdx.input.setInputProcessor(stageScore);
-
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                resultTable.remove();
-                gameMusic.stop();
-                game.setScreen(new MapScreen(game));
-            }
-        });
-        againButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                resultTable.remove();
-                gameMusic.stop();
-                dispose();
-                game.setScreen(new WhackAMoleScreen(game));
-            }
-        });
-    }
-
     @Override
     public void dispose() {
         Timer.instance().clear();
