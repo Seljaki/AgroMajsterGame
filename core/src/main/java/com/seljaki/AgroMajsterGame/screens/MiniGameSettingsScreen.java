@@ -1,4 +1,4 @@
-package com.seljaki.AgroMajsterGame.screens.DuckHuntMagpie;
+package com.seljaki.AgroMajsterGame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -18,9 +18,11 @@ import com.seljaki.AgroMajsterGame.Helpers.AnimatedActor;
 import com.seljaki.AgroMajsterGame.Helpers.GameButton;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
-import com.seljaki.AgroMajsterGame.screens.MapScreen;
+import com.seljaki.AgroMajsterGame.screens.DuckHuntMagpie.DuckHuntMagpie;
+import com.badlogic.gdx.utils.Align;
+import com.seljaki.AgroMajsterGame.screens.WhackAMole.WhackAMoleScreen;
 
-public class DuckHuntMagpieSettings extends ScreenAdapter {
+public class MiniGameSettingsScreen extends ScreenAdapter {
     private Stage stage;
     private final SeljakiMain game;
     private final BitmapFont gameFont;
@@ -30,53 +32,58 @@ public class DuckHuntMagpieSettings extends ScreenAdapter {
     private AnimatedActor leftMagpieActor;
     private AnimatedActor rightMagpieActor;
     private final GameButton buttons;
+    private final boolean miniGame;
 
-    public DuckHuntMagpieSettings(SeljakiMain game){
+    public MiniGameSettingsScreen(SeljakiMain game, boolean miniGame) { //miniGame: true = Magpie, false = mole
         this.game = game;
         assetManager = game.getAssetManager();
-        assetManager.load(AssetDescriptors.UI_SKIN);
-        assetManager.load(AssetDescriptors.GAMEPLAY);
-        assetManager.load(AssetDescriptors.EMPTY_GUN_SHOT);
-        assetManager.load(AssetDescriptors.GUN_SHOT);
-        assetManager.load(AssetDescriptors.GAME_FONT);
-        assetManager.load(AssetDescriptors.SELECT_SOUND);
-        assetManager.load(AssetDescriptors.RELOAD_SOUND);
-        assetManager.load(AssetDescriptors.GAME_OVER_SOUND);
-        assetManager.load(AssetDescriptors.SCORE_SOUND);
-        assetManager.finishLoading();
         viewport = game.viewport;
         buttons = new GameButton(game);
-        gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
+        gameplayAtlas = game.gameplayAtlas;
         gameFont = assetManager.get(AssetDescriptors.GAME_FONT);
+        this.miniGame = miniGame;
     }
+
     @Override
-    public void show(){
+    public void show() {
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
         stage = new Stage(viewport, game.batch);
         settingsUi();
         Gdx.input.setInputProcessor(stage);
     }
-    private void settingsUi(){
-        Skin uiSkin = assetManager.get(AssetDescriptors.UI_SKIN);
+
+    private void settingsUi() {
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = gameFont;
+        style.fontColor = new Color(Color.BLACK);
+        Label title;
+        TextureRegion backgroundRegion;
+        if (miniGame) {
+            title = new Label("MAGPIE MINI-GAME", style);
+            backgroundRegion = gameplayAtlas.findRegion(RegionNames.BG_DG);
+        } else {
+            title = new Label("WHACK-A-MOLE\n MINI-GAME", style);
+            backgroundRegion = gameplayAtlas.findRegion(RegionNames.GRASSY_BACKGROUND);
+        }
+
+        Skin uiSkin = game.skin;
         float stageWidth = stage.getWidth();
         float stageHeight = stage.getHeight();
 
-        TextureRegion backgroundRegion = gameplayAtlas.findRegion(RegionNames.BG_DG);
+
 
         Table table = new Table();
         float tableWidth = stageWidth * 0.8f;
         float tableHeight = stageHeight * 0.6f;
-        table.setSize(tableWidth,tableHeight);
+        table.setSize(tableWidth, tableHeight);
         //table.debugCell();
         table.setBackground(new TextureRegionDrawable(backgroundRegion));
         table.setFillParent(true);
         stage.addActor(table);
 
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = gameFont;
-        style.fontColor = new Color(Color.BLACK);
-        Label title = new Label("MAGPIE MINI-GAME", style);
+        //Label title = new Label("MAGPIE MINI-GAME", style);
         title.setFontScale(1f);
+        title.setAlignment(Align.center);
         table.add(title).padBottom(20).expand().colspan(3).row();
 
         Label chooseDifficultyLabel = new Label("Choose difficulty:", style);
@@ -88,32 +95,63 @@ public class DuckHuntMagpieSettings extends ScreenAdapter {
         selectBoxStyle = uiSkin.get("default", SelectBox.SelectBoxStyle.class);
 
         SelectBox chooseDifficultySelectBox = new SelectBox(selectBoxStyle);
-        String[] difficulties = {"Easy","Medium","Hard"};
+        String[] difficulties = {"Easy", "Medium", "Hard"};
         chooseDifficultySelectBox.setItems(difficulties);
-        chooseDifficultySelectBox.setSelected(GameManager.INSTANCE.getDifficulty());
+        if (miniGame) {
+            chooseDifficultySelectBox.setSelected(GameManager.INSTANCE.getDifficultyMagpie());
+
+        } else {
+            chooseDifficultySelectBox.setSelected(GameManager.INSTANCE.getDifficultyMole());
+        }
 
         chooseDifficultySelectBox.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 String selectedDifficulty = chooseDifficultySelectBox.getSelected().toString();
-                GameManager.INSTANCE.setDifficulty(selectedDifficulty);
+                if (miniGame) {
+                    GameManager.INSTANCE.setDifficultyMagpie(selectedDifficulty);
+
+                } else {
+                    GameManager.INSTANCE.setDifficultyMole(selectedDifficulty);
+                }
             }
         });
-        createMagpieAnimations();
-        table.add(rightMagpieActor).pad(10);
-        table.add(chooseDifficultySelectBox).top().center();
-        table.add(leftMagpieActor).pad(10);
-        table.row();
-        table.add(buttons.getGameButton(RegionNames.BACK,RegionNames.BACK_HOVER,
+
+        if (miniGame) {
+            createMagpieAnimations();
+            table.add(rightMagpieActor).pad(10);
+            table.add(chooseDifficultySelectBox).top().center();
+            table.add(leftMagpieActor).pad(10);
+            table.row();
+        } else {
+
+            Image mole1 = new Image(gameplayAtlas.findRegion(RegionNames.MOLE1));
+            Image mole2 = new Image(gameplayAtlas.findRegion(RegionNames.MOLE2));
+            table.add(mole1);
+            table.add(chooseDifficultySelectBox).top().center();
+            table.add(mole2);
+            table.row();
+        }
+
+        table.add(buttons.getGameButton(RegionNames.BACK, RegionNames.BACK_HOVER,
             () -> new MapScreen(game)
         )).padBottom(20).right().expandY();
-        table.add(buttons.getGameButton(RegionNames.PLAY_TEXT,RegionNames.PLAY_TEXT_HOVER,
-            () -> new DuckHuntMagpie(game)
+
+        if (miniGame) {
+            table.add(buttons.getGameButton(RegionNames.PLAY_TEXT, RegionNames.PLAY_TEXT_HOVER,
+                () -> new DuckHuntMagpie(game)
             )).padBottom(20).expandY();
-        table.add(buttons.getGameButton(RegionNames.LEADERBOARD,RegionNames.LEADERBOARD_HOVER,
+        } else {
+            table.add(buttons.getGameButton(RegionNames.PLAY_TEXT, RegionNames.PLAY_TEXT_HOVER,
+                () -> new WhackAMoleScreen(game)
+            )).padBottom(20).expandY();
+        }
+
+        table.add(buttons.getGameButton(RegionNames.LEADERBOARD, RegionNames.LEADERBOARD_HOVER,
             () -> new DuckHuntMagpie(game) // TODO: TUKAJ SE DODA LEADERBOARD SCREEN
         )).padBottom(20).left().expandY().row();
     }
+
     private void createMagpieAnimations() {
         Array<TextureRegion> framesLeft = new Array<>();
         for (String magpieSpriteName : RegionNames.MENU_MAGPIE_SPRITES_LEFT) {

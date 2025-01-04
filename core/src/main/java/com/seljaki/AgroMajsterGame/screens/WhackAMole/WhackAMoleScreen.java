@@ -63,12 +63,6 @@ public class WhackAMoleScreen extends ScreenAdapter {
         this.score = 0;
         this.timeRemaining = totalTime;
         assetManager = game.getAssetManager();
-
-        assetManager.load(AssetDescriptors.MOLE_SQUEAK_SOUND);
-        assetManager.load(AssetDescriptors.WHACK_A_MOLE_MUSIC);
-        assetManager.load(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
-        assetManager.finishLoading();
-
         skin = game.skin;
         gameplayAtlas = game.gameplayAtlas;
         moleSqueak = assetManager.get(AssetDescriptors.MOLE_SQUEAK_SOUND);

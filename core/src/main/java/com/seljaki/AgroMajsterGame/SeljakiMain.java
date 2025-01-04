@@ -42,6 +42,16 @@ public class SeljakiMain extends Game {
         assetManager = new AssetManager();
         assetManager.load(AssetDescriptors.GAMEPLAY);
         assetManager.load(AssetDescriptors.UI_SKIN);
+        assetManager.load(AssetDescriptors.EMPTY_GUN_SHOT);
+        assetManager.load(AssetDescriptors.GUN_SHOT);
+        assetManager.load(AssetDescriptors.GAME_FONT);
+        assetManager.load(AssetDescriptors.SELECT_SOUND);
+        assetManager.load(AssetDescriptors.RELOAD_SOUND);
+        assetManager.load(AssetDescriptors.GAME_OVER_SOUND);
+        assetManager.load(AssetDescriptors.SCORE_SOUND);
+        assetManager.load(AssetDescriptors.MOLE_SQUEAK_SOUND);
+        assetManager.load(AssetDescriptors.WHACK_A_MOLE_MUSIC);
+        assetManager.load(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
         assetManager.finishLoading();
 
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);

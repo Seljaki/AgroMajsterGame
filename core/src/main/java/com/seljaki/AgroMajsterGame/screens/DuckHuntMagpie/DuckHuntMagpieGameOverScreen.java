@@ -18,6 +18,7 @@ import com.seljaki.AgroMajsterGame.GameManager;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
+import com.seljaki.AgroMajsterGame.screens.MiniGameSettingsScreen;
 
 public class DuckHuntMagpieGameOverScreen extends ScreenAdapter {
     private Stage stage;
@@ -72,13 +73,13 @@ public class DuckHuntMagpieGameOverScreen extends ScreenAdapter {
         Label.LabelStyle style2 = new Label.LabelStyle();
         style2.font = gameFont;
         style2.fontColor = new Color(Color.BLACK);
-        String diff = GameManager.INSTANCE.getDifficulty();
+        String diff = GameManager.INSTANCE.getDifficultyMagpie();
         Label stats = new Label("Final Score: " + finalScore + "\nDifficulty: " + diff , style2);
         stats.setWrap(true);
         stats.setAlignment(Align.center);
         table.add(stats).pad(0).colspan(3).expand().growX().row();
         table.add(buttons.getGameButton(RegionNames.HOME,RegionNames.HOME_HOVER,
-                () -> new DuckHuntMagpieSettings(game)
+                () -> new MiniGameSettingsScreen(game, true)
             )).padBottom(20).expand().padRight(20).right();
         table.add(buttons.getGameButton(RegionNames.REPEAT,RegionNames.REPEAT_HOVER,
             () -> new DuckHuntMagpie(game) // TODO: TUKAJ SE DODA LEADERBOARD SCREEN

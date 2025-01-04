@@ -24,7 +24,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.http.Plot;
-import com.seljaki.AgroMajsterGame.screens.DuckHuntMagpie.DuckHuntMagpieSettings;
 import com.seljaki.AgroMajsterGame.screens.WhackAMole.WhackAMoleScreen;
 import com.seljaki.AgroMajsterGame.utils.Constants;
 import com.seljaki.AgroMajsterGame.utils.Geolocation;
@@ -291,9 +290,9 @@ public class MapScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(Objects.equals(selectedPlot.plotNumber, "649/16")){
-                    game.setScreen(new DuckHuntMagpieSettings(game));
+                    game.setScreen(new MiniGameSettingsScreen(game, true));
                 }else{
-                    game.setScreen(new WhackAMoleScreen(game));
+                    game.setScreen(new MiniGameSettingsScreen(game, false));
                 }
 
             }

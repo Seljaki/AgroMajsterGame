@@ -21,6 +21,7 @@ import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.AssetPaths;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
+import com.seljaki.AgroMajsterGame.screens.MiniGameSettingsScreen;
 import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
@@ -77,7 +78,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         reloadSound = assetManager.get(AssetDescriptors.RELOAD_SOUND);
         gameOverSound = assetManager.get(AssetDescriptors.GAME_OVER_SOUND);
         //scoreSound = assetManager.get(AssetDescriptors.SCORE_SOUND);
-        difficulty = GameManager.INSTANCE.getDifficulty();
+        difficulty = GameManager.INSTANCE.getDifficultyMagpie();
     }
 
     @Override
@@ -331,7 +332,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
             }
         }else{
             if(Gdx.input.isKeyJustPressed(Input.Keys.H)){
-                game.setScreen(new DuckHuntMagpieSettings(game));
+                game.setScreen(new MiniGameSettingsScreen(game, true));
             }
         }
     }

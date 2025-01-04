@@ -8,7 +8,8 @@ public class GameManager {
     public static final GameManager INSTANCE = new GameManager();
     private static final String PREFS_NAME = "mySettingsPrefs";
 
-    private static final String KEY_DIFFICULTY = "difficulties";
+    private static final String KEY_DIFFICULTY_MAGPIE = "difficultiesMagpieGame";
+    private static final String KEY_DIFFICULTY_MOLE = "difficultiesMoleGame";
 
     private Preferences prefs;
 
@@ -16,12 +17,21 @@ public class GameManager {
         prefs = Gdx.app.getPreferences(PREFS_NAME);
     }
 
-    public void setDifficulty(String player) {
-        prefs.putString(KEY_DIFFICULTY, player);
+    public void setDifficultyMagpie(String difficulty) {
+        prefs.putString(KEY_DIFFICULTY_MAGPIE, difficulty);
         prefs.flush();
     }
 
-    public String getDifficulty() {
-        return prefs.getString(KEY_DIFFICULTY, "Easy");
+    public String getDifficultyMagpie() {
+        return prefs.getString(KEY_DIFFICULTY_MAGPIE, "Easy");
+    }
+
+    public void setDifficultyMole(String difficulty) {
+        prefs.putString(KEY_DIFFICULTY_MOLE, difficulty);
+        prefs.flush();
+    }
+
+    public String getDifficultyMole() {
+        return prefs.getString(KEY_DIFFICULTY_MOLE, "Easy");
     }
 }
