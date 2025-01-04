@@ -22,8 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
@@ -54,13 +52,16 @@ public class MapScreen extends ScreenAdapter {
     private Plot selectedPlot;
     private Stage stage;
     private Skin skin;
-    private Skin testSkin;
     InputMultiplexer inputMultiplexer;
     private Vector2 cameraVelocity = new Vector2(0,0);
 
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
     private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
     private Viewport viewport;
+    private Stage stageUI;
+
+
+
     public MapScreen(SeljakiMain game) {
         this.game = game;
     }
@@ -69,6 +70,7 @@ public class MapScreen extends ScreenAdapter {
     public void show() {
         viewport = new FitViewport(1280, 960);
         stage = new Stage(viewport);
+        //stageUI = new Stage(viewport);
         skin = game.skin;
         //testSkin =  new Skin(Gdx.files.internal("ui/skin/flat-earth-ui.json"));
         plots = game.seljakiClient.getPlots();
@@ -82,6 +84,39 @@ public class MapScreen extends ScreenAdapter {
         camera.viewportHeight = Constants.MAP_HEIGHT / 2f;
         camera.zoom = 2f;
         camera.update();
+
+
+        TextButton leaderboardButton = new TextButton("Leaderboard", skin);
+        leaderboardButton.setPosition(stage.getWidth()-leaderboardButton.getWidth()-20, stage.getHeight()-leaderboardButton.getHeight()-20);
+        leaderboardButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+
+        TextButton logOutButton = new TextButton("Log Out", skin);
+        logOutButton.setPosition(stage.getWidth()-logOutButton.getWidth()-20, leaderboardButton.getY()-logOutButton.getHeight()-20);
+        logOutButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.seljakiClient.logOut();
+                game.setScreen(new LoginScreen(game));
+            }
+        });
+
+        TextButton quitButton = new TextButton("Quit", skin);
+        quitButton.setPosition(logOutButton.getX()-quitButton.getWidth()-20, leaderboardButton.getY()-quitButton.getHeight()-20);
+        quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+        stage.addActor(logOutButton);
+        stage.addActor(quitButton);
+        stage.addActor(leaderboardButton);
+
 
         touchPosition = new Vector3();
 
@@ -183,6 +218,8 @@ public class MapScreen extends ScreenAdapter {
         drawPlots();
 
         stage.draw();
+        stage.act(delta);
+        //stageUI.draw();
     }
 
     private void drawPlots() {
@@ -268,7 +305,7 @@ public class MapScreen extends ScreenAdapter {
 
     void onPlotClicked(Plot plot) {
         selectedPlot = plot;
-        stage.clear();
+        //stage.clear();
         stage.addActor(createPlotInfoWindow(plot));
     }
 
@@ -296,6 +333,7 @@ public class MapScreen extends ScreenAdapter {
         playGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                dialog.remove();
                 if(Objects.equals(selectedPlot.plotNumber, "649/16")){
                     game.setScreen(new MiniGameSettingsScreen(game, true));
                 }else{
@@ -318,7 +356,6 @@ public class MapScreen extends ScreenAdapter {
 
         return dialog;
     }
-
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);

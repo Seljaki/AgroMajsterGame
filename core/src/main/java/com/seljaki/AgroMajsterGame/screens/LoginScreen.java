@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 
@@ -32,6 +33,7 @@ public class LoginScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         stage.act(delta);
+        ScreenUtils.clear(0.07058824f, 0.07058824f, 0.07058824f, 1);
         stage.draw();
     }
 
