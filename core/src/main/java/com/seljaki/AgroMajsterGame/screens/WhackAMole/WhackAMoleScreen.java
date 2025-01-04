@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
+import com.seljaki.AgroMajsterGame.GameManager;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
@@ -44,7 +45,8 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private Label scoreLabel;
     private Image timerBar;
     private float timeRemaining;
-    private final float totalTime = 3f;
+    private float totalTime;
+    private int moleWaitTime;
     TextureRegion mole1Texture;
     TextureRegion mole2Texture;
     private final TextureAtlas gameplayAtlas;
@@ -52,6 +54,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private final Music gameMusic;
     private final ParticleEffect particleEffectMoleBlood;
     private AssetManager assetManager;
+    private final String difficulty;
 
 
     public WhackAMoleScreen(SeljakiMain game) {
@@ -60,7 +63,6 @@ public class WhackAMoleScreen extends ScreenAdapter {
         this.moleHillStateMap = new HashMap<>();
         this.activeMoles = 0;
         this.score = 0;
-        this.timeRemaining = totalTime;
         assetManager = game.getAssetManager();
         skin = game.skin;
         gameplayAtlas = game.gameplayAtlas;
@@ -68,6 +70,24 @@ public class WhackAMoleScreen extends ScreenAdapter {
         gameMusic = assetManager.get(AssetDescriptors.WHACK_A_MOLE_MUSIC);
         gameMusic.setLooping(true);
         particleEffectMoleBlood = assetManager.get(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
+        difficulty = GameManager.INSTANCE.getDifficultyMole();
+
+
+        switch (difficulty) {
+            case "Medium":
+                totalTime = 30f;
+                moleWaitTime = 2;
+                break;
+            case "Hard":
+                totalTime = 15f;
+                moleWaitTime = 1;
+                break;
+            default:
+                totalTime = 45f;
+                moleWaitTime = 3;
+        }
+
+        this.timeRemaining = totalTime;
     }
 
     @Override
@@ -225,9 +245,9 @@ public class WhackAMoleScreen extends ScreenAdapter {
                     });
 
                     mole.addAction(Actions.sequence(
-                        Actions.delay(2),
+                        Actions.delay(1.3f),
                         Actions.moveBy(0, 45, 0.3f),
-                        Actions.delay(2),
+                        Actions.delay(moleWaitTime),
                         Actions.moveBy(0, -45, 0.3f),
                         Actions.run(() -> {
                             mole.remove();

@@ -80,14 +80,14 @@ public class DuckHuntMagpie extends ScreenAdapter {
         gameOverSound = assetManager.get(AssetDescriptors.GAME_OVER_SOUND);
         //scoreSound = assetManager.get(AssetDescriptors.SCORE_SOUND);
         difficulty = GameManager.INSTANCE.getDifficultyMagpie();
+        gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
+        viewport = game.viewport;
     }
 
     @Override
     public void show() {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
-        viewport = game.viewport;
 
         switch (difficulty) {
             case "Medium":
