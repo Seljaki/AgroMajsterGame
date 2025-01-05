@@ -40,6 +40,7 @@ public class SeljakiMain extends Game {
         assetManager = new AssetManager();
         assetManager.load(AssetDescriptors.GAMEPLAY);
         assetManager.load(AssetDescriptors.UI_SKIN);
+        assetManager.load(AssetDescriptors.SKIN);
         assetManager.load(AssetDescriptors.EMPTY_GUN_SHOT);
         assetManager.load(AssetDescriptors.GUN_SHOT);
         assetManager.load(AssetDescriptors.GAME_FONT);

@@ -30,6 +30,13 @@ public class SeljakiClient {
         return loginInfo.user;
     }
 
+    public String getUsername() {
+        if(loginInfo == null)
+            return null;
+
+        return getUser().username;
+    }
+
     public static SeljakiClient loadData() {
         FileHandle file = Gdx.files.local(FILENAME);
 

@@ -67,7 +67,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private int maxAmmo;
     private int ammo = 6;
     private final Sound gameOverSound;
-    //private final Sound scoreSound;
+    private final Skin skinForWindow;
 
     public DuckHuntMagpie(SeljakiMain game) {
         this.game = game;
@@ -82,6 +82,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         difficulty = GameManager.INSTANCE.getDifficultyMagpie();
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
         viewport = game.viewport;
+        skinForWindow = assetManager.get(AssetPaths.SKIN);
     }
 
     @Override
@@ -253,7 +254,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
             pauseMessage = "Pause [P]";
         }else{
            pauseMessage = "Resume [P]";
-           BitmapFont homeFont = skin.getFont("window");
+           BitmapFont homeFont = skinForWindow.getFont("window");
            homeFont.getData().setScale(0.7f);
            GlyphLayout layoutHome = new GlyphLayout(homeFont, "Home [H]");
            float hx = (screenWidth - layoutHome.width) / 2f;
@@ -261,9 +262,9 @@ public class DuckHuntMagpie extends ScreenAdapter {
            homeFont.getData().setScale(0.7f);
            homeFont.draw(batch, layoutHome, hx, hy);
         }
-        layoutPause.setText(skin.getFont("window"), pauseMessage);
+        layoutPause.setText(skinForWindow.getFont("window"), pauseMessage);
         float xPause = (screenWidth - layoutPause.width) /2;
-        BitmapFont pausedFont = skin.getFont("window");
+        BitmapFont pausedFont = skinForWindow.getFont("window");
         pausedFont.getData().setScale(0.7f);
         pausedFont.draw(batch,layoutPause, xPause, screenHeight /14);
 
