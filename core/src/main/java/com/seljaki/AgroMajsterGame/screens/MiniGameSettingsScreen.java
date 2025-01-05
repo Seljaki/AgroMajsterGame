@@ -71,7 +71,6 @@ public class MiniGameSettingsScreen extends ScreenAdapter {
         float stageHeight = stage.getHeight();
 
 
-
         Table table = new Table();
         float tableWidth = stageWidth * 0.8f;
         float tableHeight = stageHeight * 0.6f;
@@ -137,18 +136,26 @@ public class MiniGameSettingsScreen extends ScreenAdapter {
             () -> new MapScreen(game)
         )).padBottom(20).right().expandY();
 
-        if (miniGame) {
-            table.add(buttons.getGameButton(RegionNames.PLAY_TEXT, RegionNames.PLAY_TEXT_HOVER,
-                () -> new DuckHuntMagpie(game)
-            )).padBottom(20).expandY();
-        } else {
-            table.add(buttons.getGameButton(RegionNames.PLAY_TEXT, RegionNames.PLAY_TEXT_HOVER,
-                () -> new WhackAMoleScreen(game)
-            )).padBottom(20).expandY();
-        }
+
+        table.add(buttons.getGameButton(RegionNames.PLAY_TEXT, RegionNames.PLAY_TEXT_HOVER,
+            () -> {
+                if (miniGame) {
+                    return new DuckHuntMagpie(game);
+                } else {
+                    return new WhackAMoleScreen(game);
+                }
+            }
+        )).padBottom(20).expandY();
+
 
         table.add(buttons.getGameButton(RegionNames.LEADERBOARD, RegionNames.LEADERBOARD_HOVER,
-            () -> new DuckHuntMagpie(game) // TODO: TUKAJ SE DODA LEADERBOARD SCREEN
+            () ->{
+                if (miniGame) {
+                    return new LeaderboardScreen(game, SeljakiMain.PreviousScreen.MAGPIE);
+                } else {
+                    return new LeaderboardScreen(game, SeljakiMain.PreviousScreen.MOLE);
+                }
+            }
         )).padBottom(20).left().expandY().row();
     }
 

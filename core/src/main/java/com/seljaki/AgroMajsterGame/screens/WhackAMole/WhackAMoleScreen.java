@@ -294,5 +294,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
         stage.dispose();
         stageFront.dispose();
         stageScore.dispose();
+        gameMusic.dispose();
+        moleSqueak.dispose();
     }
 }

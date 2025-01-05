@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.badlogic.gdx.net.HttpRequestBuilder.json;
@@ -50,7 +51,7 @@ public class GameManager {
     }
 
     public static class Leaderboard {
-        public List<PlayerScore> playerScores;
+        public List<PlayerScore> playerScores  = new ArrayList<>();
 
         public void sortByHighScore() {
             if (playerScores != null) {

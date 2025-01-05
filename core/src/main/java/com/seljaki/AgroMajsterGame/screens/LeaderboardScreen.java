@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.seljaki.AgroMajsterGame.GameManager;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
+import com.seljaki.AgroMajsterGame.screens.WhackAMole.WhackAMoleScreen;
 
 
 public class LeaderboardScreen extends ScreenAdapter {
@@ -27,13 +28,15 @@ public class LeaderboardScreen extends ScreenAdapter {
     private Image background;
     private TextureRegion bgMagpie;
     private TextureRegion bgMole;
+    SeljakiMain.PreviousScreen previousScreen;
 
-    public LeaderboardScreen(SeljakiMain game) {
+    public LeaderboardScreen(SeljakiMain game, SeljakiMain.PreviousScreen previous) {
         this.game = game;
         skin = game.skin;
         gameplayAtlas = game.gameplayAtlas;
         bgMole = gameplayAtlas.findRegion(RegionNames.GRASSY_BACKGROUND);
         bgMagpie = gameplayAtlas.findRegion(RegionNames.BG_DG);
+        previousScreen = previous;
     }
 
     public void show() {
@@ -47,7 +50,7 @@ public class LeaderboardScreen extends ScreenAdapter {
 
         // Table to hold leaderboard and buttons
         root = new Table();
-        root.setSize(stage.getWidth()-150, stage.getHeight()-100);
+        root.setSize(stage.getWidth() - 150, stage.getHeight() - 100);
 
         // Leaderboard table
         table = new Table();
@@ -59,12 +62,12 @@ public class LeaderboardScreen extends ScreenAdapter {
         loadLeaderboardIntoTable(true);
 
         // Buttons for grid sizes
-        TextButton magpieButton = new TextButton("Magpie Hunt", skin);
-        TextButton moleButton = new TextButton("Whack-a-Mole", skin);
+        TextButton magpieButton = new TextButton("Magpie hunt", skin);
+        TextButton moleButton = new TextButton("Whack-a-mole", skin);
         TextButton backButton = new TextButton("Back", skin);
 
-        root.add(magpieButton).fill(true,false).expandX().center().padRight(5);//.fill(true,false);
-        root.add(moleButton).fill(true,false).expandX().center().padLeft(5).row();//.fill(true,false);
+        root.add(magpieButton).fill(true, false).expandX().center().padRight(5);//.fill(true,false);
+        root.add(moleButton).fill(true, false).expandX().center().padLeft(5).row();//.fill(true,false);
         root.add(scrollPane).colspan(3).expand().fill().row();
 
         root.add(backButton).center().colspan(3).pad(10);
@@ -88,7 +91,19 @@ public class LeaderboardScreen extends ScreenAdapter {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MapScreen(game));
+                switch (previousScreen) {
+                    case MAGPIE:
+                        game.setScreen(new MiniGameSettingsScreen(game,true));
+
+                        break;
+                    case MOLE:
+                        game.setScreen(new MiniGameSettingsScreen(game,false));
+
+                        break;
+                    default:
+                        game.setScreen(new MapScreen(game));
+
+                }
             }
         });
 
@@ -101,13 +116,12 @@ public class LeaderboardScreen extends ScreenAdapter {
         if (MinigameType) {
             miniGame = "Magpie hunt";
             background.setDrawable(new TextureRegionDrawable(bgMagpie));
-        }
-        else {
+        } else {
             miniGame = "Whack-a-mole";
             background.setDrawable(new TextureRegionDrawable(bgMole));
         }
 
-        table.add(new Label(miniGame+" leaderboard", skin)).expandX().colspan(2).row();
+        table.add(new Label(miniGame + " leaderboard", skin)).expandX().colspan(2).row();
         table.add(new Label("NAME", skin)).expandX().center().pad(10);
         table.add(new Label("SCORE", skin)).expandX().center().pad(10).row();
 
@@ -117,8 +131,8 @@ public class LeaderboardScreen extends ScreenAdapter {
         for (int i = 0; i < leaderboard.playerScores.size(); i++) {
             String player = leaderboard.playerScores.get(i).playerName;
             int score = leaderboard.playerScores.get(i).highScore;
-            table.add(new Label(player, skin)).fillX().center().pad(10);
-            table.add(new Label(String.valueOf(score), skin)).fillX().center().pad(10).row();
+            table.add(new Label(player, skin)).expandX().center().pad(10);
+            table.add(new Label(String.valueOf(score), skin)).expandX().center().pad(10).row();
         }
     }
 

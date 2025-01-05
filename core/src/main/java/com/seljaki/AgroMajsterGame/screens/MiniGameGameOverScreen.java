@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.seljaki.AgroMajsterGame.Helpers.GameButton;
 import com.seljaki.AgroMajsterGame.GameManager;
+import com.seljaki.AgroMajsterGame.Helpers.MagpieBird;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.assets.RegionNames;
@@ -92,22 +93,59 @@ public class MiniGameGameOverScreen extends ScreenAdapter {
         stats.setAlignment(Align.center);
         table.add(stats).pad(0).colspan(3).expand().growX().row();
 
-        table.add(buttons.getGameButton(RegionNames.HOME, RegionNames.HOME_HOVER,
-            () -> new MiniGameSettingsScreen(game, miniGame)
+        table.add(buttons.getGameButton(
+            RegionNames.HOME,
+            RegionNames.HOME_HOVER,
+            () -> {
+                GameManager.PlayerScore playerScore = new GameManager.PlayerScore();
+                GameManager.Leaderboard leaderboard = GameManager.loadLeaderboard(miniGame);
+
+                playerScore.playerName = game.seljakiClient.getUsername();
+                playerScore.highScore = finalScore;
+
+                leaderboard.playerScores.add(playerScore);
+                GameManager.saveLeaderboard(leaderboard, miniGame);
+
+                return new MiniGameSettingsScreen(game, miniGame);
+            }
         )).padBottom(20).expand().padRight(20).right();
 
-        if (miniGame) {
-            table.add(buttons.getGameButton(RegionNames.REPEAT, RegionNames.REPEAT_HOVER,
-                () -> new DuckHuntMagpie(game)
-            )).padBottom(20).expandY();
-        } else {
-            table.add(buttons.getGameButton(RegionNames.REPEAT, RegionNames.REPEAT_HOVER,
-                () -> new WhackAMoleScreen(game)
-            )).padBottom(20).expandY();
-        }
+
+        table.add(buttons.getGameButton(RegionNames.REPEAT, RegionNames.REPEAT_HOVER,
+            () -> {
+                GameManager.PlayerScore playerScore = new GameManager.PlayerScore();
+                GameManager.Leaderboard leaderboard = GameManager.loadLeaderboard(miniGame);
+
+                playerScore.playerName = game.seljakiClient.getUsername();
+                playerScore.highScore = finalScore;
+
+                leaderboard.playerScores.add(playerScore);
+                GameManager.saveLeaderboard(leaderboard, miniGame);
+                if (miniGame) {
+                    return new DuckHuntMagpie(game);
+                } else {
+                    return new WhackAMoleScreen(game);
+                }
+            }
+        )).padBottom(20).expandY();
 
         table.add(buttons.getGameButton(RegionNames.LEADERBOARD, RegionNames.LEADERBOARD_HOVER,
-            () -> new DuckHuntMagpie(game) // TODO: TUKAJ SE DODA LEADERBOARD SCREEN
+            () -> {
+                GameManager.PlayerScore playerScore = new GameManager.PlayerScore();
+                GameManager.Leaderboard leaderboard = GameManager.loadLeaderboard(miniGame);
+
+                playerScore.playerName = game.seljakiClient.getUsername();
+                playerScore.highScore = finalScore;
+
+                leaderboard.playerScores.add(playerScore);
+                GameManager.saveLeaderboard(leaderboard, miniGame);
+
+                if (miniGame) {
+                    return new LeaderboardScreen(game, SeljakiMain.PreviousScreen.MAGPIE);
+                } else {
+                    return new LeaderboardScreen(game, SeljakiMain.PreviousScreen.MOLE);
+                }
+            }
         )).padBottom(20).expand().padLeft(20).left().row();
     }
 

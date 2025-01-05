@@ -29,8 +29,12 @@ public class SeljakiMain extends Game {
         return assetManager;
     }
     public TextureAtlas gameplayAtlas;
-    public Sound moleSqueak;
-    public Music whackAMoleMusic;
+
+    public enum PreviousScreen {
+        MAP,
+        MAGPIE,
+        MOLE
+    }
     @Override
     public void create() {
         viewport = new FitViewport(640, 480);
@@ -79,8 +83,6 @@ public class SeljakiMain extends Game {
         batch.dispose();
         skin.dispose();
         gameplayAtlas.dispose();
-        whackAMoleMusic.dispose();
-        moleSqueak.dispose();
         assetManager.dispose();
     }
 }

@@ -91,7 +91,7 @@ public class MapScreen extends ScreenAdapter {
         leaderboardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new LeaderboardScreen(game));
+                game.setScreen(new LeaderboardScreen(game, SeljakiMain.PreviousScreen.MAP));
                 System.out.println(game.seljakiClient.getUsername());
             }
         });
