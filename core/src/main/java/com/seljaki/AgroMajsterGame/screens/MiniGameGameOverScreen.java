@@ -29,11 +29,11 @@ public class MiniGameGameOverScreen extends ScreenAdapter {
     private final BitmapFont gameFont;
     private final TextureAtlas gameplayAtlas;
     private final Viewport viewport;
-    private final int finalScore;
+    private final float finalScore;
     private final GameButton buttons;
     private final boolean miniGame;
 
-    public MiniGameGameOverScreen(SeljakiMain game, int finalScore, boolean miniGame) {
+    public MiniGameGameOverScreen(SeljakiMain game, float finalScore, boolean miniGame) {
         this.game = game;
         this.finalScore = finalScore;
         AssetManager assetManager = game.getAssetManager();

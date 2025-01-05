@@ -130,7 +130,7 @@ public class LeaderboardScreen extends ScreenAdapter {
         if (leaderboard.playerScores == null) return;
         for (int i = 0; i < leaderboard.playerScores.size(); i++) {
             String player = leaderboard.playerScores.get(i).playerName;
-            int score = leaderboard.playerScores.get(i).highScore;
+            float score = leaderboard.playerScores.get(i).highScore;
             table.add(new Label(player, skin)).expandX().center().pad(10);
             table.add(new Label(String.valueOf(score), skin)).expandX().center().pad(10).row();
         }

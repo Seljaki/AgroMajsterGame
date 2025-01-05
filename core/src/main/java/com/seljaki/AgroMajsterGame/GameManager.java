@@ -46,7 +46,7 @@ public class GameManager {
 
 
     public static class PlayerScore {
-        public int highScore;
+        public float highScore;
         public String playerName;
     }
 
@@ -55,7 +55,7 @@ public class GameManager {
 
         public void sortByHighScore() {
             if (playerScores != null) {
-                playerScores.sort((p1, p2) -> Integer.compare(p2.highScore, p1.highScore));
+                playerScores.sort((p1, p2) -> Float.compare(p2.highScore, p1.highScore));
             }
         }
     }

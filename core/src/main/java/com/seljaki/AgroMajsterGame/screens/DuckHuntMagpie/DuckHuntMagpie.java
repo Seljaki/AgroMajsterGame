@@ -68,6 +68,8 @@ public class DuckHuntMagpie extends ScreenAdapter {
     private int ammo = 6;
     private final Sound gameOverSound;
     private final Skin skinForWindow;
+    private float multiplier;
+
 
     public DuckHuntMagpie(SeljakiMain game) {
         this.game = game;
@@ -92,6 +94,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
 
         switch (difficulty) {
             case "Medium":
+                multiplier =1.5f;
                 magpieScale = 0.22f;
                 maxBirdsAtOnce = 20;
                 birdBaseSpeed = 200f;
@@ -100,6 +103,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
                 ammo = 8;
                 break;
             case "Hard":
+                multiplier = 1.75f;
                 magpieScale = 0.18f;
                 maxBirdsAtOnce = 30;
                 birdBaseSpeed = 250f;
@@ -108,6 +112,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
                 ammo = 6;
                 break;
             default:
+                multiplier =1f;
                 magpieScale = 0.26f;
                 maxBirdsAtOnce = 5;
                 birdBaseSpeed = 150f;
@@ -153,7 +158,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 
         if(gameOver){
-            game.setScreen(new MiniGameGameOverScreen(game, score, true));
+            game.setScreen(new MiniGameGameOverScreen(game, score*multiplier, true));
         }
 
         handleInput();
@@ -226,10 +231,10 @@ public class DuckHuntMagpie extends ScreenAdapter {
         ammoFont.getData().setScale(0.5f);
         ammoFont.setColor(Color.BLACK);
 
-        GlyphLayout layoutScore = new GlyphLayout(ammoFont, "" + score);
+        GlyphLayout layoutScore = new GlyphLayout(ammoFont, "" + score+ " x"+multiplier);
         Image scoreImage = new Image(gameplayAtlas.findRegion(RegionNames.CROW));
         scoreImage.setSize(40,40);
-        float scoreX = scoreImage.getWidth() + 20f;
+        float scoreX = scoreImage.getWidth() + 100f;
         float scoreY = screenHeight - 42f;
         scoreImage.setPosition(scoreX, scoreY);
         scoreImage.draw(batch, 1);

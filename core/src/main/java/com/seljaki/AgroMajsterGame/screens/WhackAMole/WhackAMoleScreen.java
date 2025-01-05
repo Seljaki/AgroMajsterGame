@@ -52,6 +52,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private final String difficulty;
 
     private Label.LabelStyle labelStyle;
+    private float multiplier;
 
     public WhackAMoleScreen(SeljakiMain game) {
         this.game = game;
@@ -75,14 +76,17 @@ public class WhackAMoleScreen extends ScreenAdapter {
 
         switch (difficulty) {
             case "Hard":
+                multiplier = 1.75f;
                 totalTime = 15f;
                 moleWaitTime = 1;
                 break;
             case "Medium":
+                multiplier =1.5f;
                 totalTime = 30f;
                 moleWaitTime = 2;
                 break;
             default:
+                multiplier =1f;
                 totalTime = 45f;
                 moleWaitTime = 3;
         }
@@ -163,7 +167,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
             scheduleMolePopUp(molehillBack);
         }
 
-        scoreLabel = new Label("Score: " + score, labelStyle);
+        scoreLabel = new Label("Score: " + score*multiplier, labelStyle);
         scoreLabel.setPosition(stage.getWidth() / 2 - scoreLabel.getWidth() / 2, stage.getHeight() - 50);
         timerBar = createTimerBar();
 
@@ -185,7 +189,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
                 if (timeRemaining <= 0) {
                     cancel();
                     gameMusic.stop();
-                    game.setScreen(new MiniGameGameOverScreen(game, score, false));
+                    game.setScreen(new MiniGameGameOverScreen(game, score*multiplier, false));
                 }
                 if (!moleHillStateMap.get(molehillBack) && shouldSpawn()) {
                     Image mole = new Image(mole1Texture);
@@ -262,7 +266,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
 
 
     private void updateScoreLabel() {
-        scoreLabel.setText("Score: " + score);
+        scoreLabel.setText("Score: " + score*multiplier);
         scoreLabel.setPosition(stage.getWidth() / 2 - scoreLabel.getWidth() / 2, stage.getHeight() - 50);
     }
     private boolean shouldSpawn() {
