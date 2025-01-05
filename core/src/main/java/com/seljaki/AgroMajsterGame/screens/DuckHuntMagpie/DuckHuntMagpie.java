@@ -234,7 +234,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         GlyphLayout layoutScore = new GlyphLayout(ammoFont, "" + score+ " x"+multiplier);
         Image scoreImage = new Image(gameplayAtlas.findRegion(RegionNames.CROW));
         scoreImage.setSize(40,40);
-        float scoreX = scoreImage.getWidth() + 100f;
+        float scoreX = scoreImage.getWidth() + 70f;
         float scoreY = screenHeight - 42f;
         scoreImage.setPosition(scoreX, scoreY);
         scoreImage.draw(batch, 1);

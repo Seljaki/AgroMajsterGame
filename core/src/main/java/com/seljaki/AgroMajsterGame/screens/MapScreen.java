@@ -35,6 +35,7 @@ import com.seljaki.AgroMajsterGame.utils.ZoomXY;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 public class MapScreen extends ScreenAdapter {
     private ShapeRenderer shapeRenderer;
@@ -335,11 +336,8 @@ public class MapScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dialog.remove();
-                if(Objects.equals(selectedPlot.plotNumber, "649/16")){
-                    game.setScreen(new MiniGameSettingsScreen(game, true));
-                }else{
-                    game.setScreen(new MiniGameSettingsScreen(game, false));
-                }
+                Random random = new Random();
+                game.setScreen(new MiniGameSettingsScreen(game, random.nextBoolean()));
 
             }
         });

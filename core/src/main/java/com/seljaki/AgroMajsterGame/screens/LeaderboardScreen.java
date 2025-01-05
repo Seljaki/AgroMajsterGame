@@ -66,8 +66,8 @@ public class LeaderboardScreen extends ScreenAdapter {
         TextButton moleButton = new TextButton("Whack-a-mole", skin);
         TextButton backButton = new TextButton("Back", skin);
 
-        root.add(magpieButton).fill(true, false).expandX().center().padRight(5);//.fill(true,false);
-        root.add(moleButton).fill(true, false).expandX().center().padLeft(5).row();//.fill(true,false);
+        root.add(magpieButton).fill(true, false).expandX().center().padRight(5).padBottom(10);//.fill(true,false);
+        root.add(moleButton).fill(true, false).expandX().center().padLeft(5).padBottom(10).row();//.fill(true,false);
         root.add(scrollPane).colspan(3).expand().fill().row();
 
         root.add(backButton).center().colspan(3).pad(10);
