@@ -31,6 +31,7 @@ import com.seljaki.AgroMajsterGame.utils.Geolocation;
 import com.seljaki.AgroMajsterGame.utils.MapRasterTiles;
 import com.seljaki.AgroMajsterGame.utils.ZoomXY;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -120,6 +121,15 @@ public class MapScreen extends ScreenAdapter {
             }
             private float lastX, lastY;
             private boolean posSet = false;
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                deltaX = 0;
+                deltaY = 0;
+
+                return true;
+            }
+
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
                 if(posSet) {
@@ -129,9 +139,6 @@ public class MapScreen extends ScreenAdapter {
                     cameraVelocity.x = 0;
                     cameraVelocity.y = 0;
                     camera.translate(deltaX, deltaY);
-                } else {
-                    deltaX = 0;
-                    deltaY = 0;
                 }
 
                 lastX = screenX;
@@ -144,7 +151,7 @@ public class MapScreen extends ScreenAdapter {
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 posSet = false;
 
-
+                System.out.println(deltaX);
                 if (Math.abs(deltaX) >= 2)
                     cameraVelocity.x = deltaX;
                 if (Math.abs(deltaY) >= 2)
