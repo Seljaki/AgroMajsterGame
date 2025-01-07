@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -21,11 +20,13 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
 import com.seljaki.AgroMajsterGame.http.Plot;
+import com.seljaki.AgroMajsterGame.screens.WhackAMole.WhackAMoleScreen;
 import com.seljaki.AgroMajsterGame.utils.Constants;
 import com.seljaki.AgroMajsterGame.utils.Geolocation;
 import com.seljaki.AgroMajsterGame.utils.MapRasterTiles;
@@ -34,6 +35,8 @@ import com.seljaki.AgroMajsterGame.utils.ZoomXY;
 import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Random;
 
 public class MapScreen extends ScreenAdapter {
     private ShapeRenderer shapeRenderer;
@@ -56,6 +59,10 @@ public class MapScreen extends ScreenAdapter {
 
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
     private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
+    private Viewport viewport;
+    private Stage stageUI;
+
+
 
     public MapScreen(SeljakiMain game) {
         this.game = game;
@@ -63,8 +70,11 @@ public class MapScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        stage = new Stage(game.viewport);
+        viewport = new FitViewport(1280, 960);
+        stage = new Stage(viewport);
+        //stageUI = new Stage(viewport);
         skin = game.skin;
+        //testSkin =  new Skin(Gdx.files.internal("ui/skin/flat-earth-ui.json"));
         plots = game.seljakiClient.getPlots();
 
         shapeRenderer = new ShapeRenderer();
@@ -76,6 +86,40 @@ public class MapScreen extends ScreenAdapter {
         camera.viewportHeight = Constants.MAP_HEIGHT / 2f;
         camera.zoom = 2f;
         camera.update();
+
+
+        TextButton leaderboardButton = new TextButton("Leaderboard", skin);
+        leaderboardButton.setPosition(stage.getWidth()-leaderboardButton.getWidth()-20, stage.getHeight()-leaderboardButton.getHeight()-20);
+        leaderboardButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new LeaderboardScreen(game, SeljakiMain.PreviousScreen.MAP));
+                System.out.println(game.seljakiClient.getUsername());
+            }
+        });
+
+        TextButton logOutButton = new TextButton("Log Out", skin);
+        logOutButton.setPosition(stage.getWidth()-logOutButton.getWidth()-20, leaderboardButton.getY()-logOutButton.getHeight()-20);
+        logOutButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.seljakiClient.logOut();
+                game.setScreen(new LoginScreen(game));
+            }
+        });
+
+        TextButton quitButton = new TextButton("Quit", skin);
+        quitButton.setPosition(logOutButton.getX()-quitButton.getWidth()-20, leaderboardButton.getY()-quitButton.getHeight()-20);
+        quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+        stage.addActor(logOutButton);
+        stage.addActor(quitButton);
+        stage.addActor(leaderboardButton);
+
 
         touchPosition = new Vector3();
 
@@ -109,7 +153,6 @@ public class MapScreen extends ScreenAdapter {
         plotsBounds = getPlotsBounds();
 
         inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(new InputAdapter(){
             float deltaX;
@@ -166,6 +209,7 @@ public class MapScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        super.render(delta);
         ScreenUtils.clear(0, 0, 0, 1);
 
         handleInput();
@@ -183,6 +227,8 @@ public class MapScreen extends ScreenAdapter {
         drawPlots();
 
         stage.draw();
+        stage.act(delta);
+        //stageUI.draw();
     }
 
     private void drawPlots() {
@@ -211,8 +257,19 @@ public class MapScreen extends ScreenAdapter {
     }
 
     @Override
+    public void hide() {
+        super.hide();
+        Gdx.input.setInputProcessor(null);
+        stage.clear();
+    }
+
+    @Override
     public void dispose() {
         shapeRenderer.dispose();
+        stage.dispose();
+        tiledMap.dispose();
+        for(Texture mapTile : mapTiles)
+            mapTile.dispose();
     }
 
     private void handleInput() {
@@ -257,7 +314,7 @@ public class MapScreen extends ScreenAdapter {
 
     void onPlotClicked(Plot plot) {
         selectedPlot = plot;
-        stage.clear();
+        //stage.clear();
         stage.addActor(createPlotInfoWindow(plot));
     }
 
@@ -285,7 +342,10 @@ public class MapScreen extends ScreenAdapter {
         playGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Play Game clicked!");
+                dialog.remove();
+                Random random = new Random();
+                game.setScreen(new MiniGameSettingsScreen(game, random.nextBoolean()));
+
             }
         });
 
@@ -298,8 +358,14 @@ public class MapScreen extends ScreenAdapter {
         dialog.setMovable(true);
         dialog.setModal(false);
         dialog.setResizable(false);
-        dialog.setPosition(20, game.viewport.getWorldHeight() - dialog.getHeight() - 20);
+        dialog.setPosition(20, viewport.getWorldHeight() - dialog.getHeight() - 20);
 
         return dialog;
+    }
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+
+        viewport.update(width, height);
     }
 }
