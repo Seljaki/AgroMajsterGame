@@ -19,6 +19,7 @@ import static com.seljaki.AgroMajsterGame.utils.Constants.SELJAKI_SERVER_URL;
 public class SeljakiClient {
     private static final String FILENAME = "userdata.json";
     LoginInfo loginInfo = null;
+    Plot[] plots = null;
     public boolean isLoggedIn() {
         return loginInfo != null;
     }
@@ -101,6 +102,7 @@ public class SeljakiClient {
     @Nullable
     public Plot[] getPlots() {
         if(loginInfo == null) return null;
+        if(this.plots != null) return this.plots;
 
         OkHttpClient client = new OkHttpClient();
         Gson gson = new Gson();
@@ -162,7 +164,8 @@ public class SeljakiClient {
                     plots.add(plot);
                 }
 
-                return plots.toArray(new Plot[0]);
+                this.plots = plots.toArray(new Plot[0]);
+                return this.plots;
             } else {
                 System.err.println("Get failed: " + response.code() + " - " + response.message());
                 return null;

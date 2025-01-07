@@ -40,7 +40,6 @@ import java.util.Random;
 
 public class MapScreen extends ScreenAdapter {
     private ShapeRenderer shapeRenderer;
-    private Vector3 touchPosition;
 
     private TiledMap tiledMap;
     private TiledMapRenderer tiledMapRenderer;
@@ -58,10 +57,7 @@ public class MapScreen extends ScreenAdapter {
     private Vector2 cameraVelocity = new Vector2(0,0);
 
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
-    private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
     private Viewport viewport;
-    private Stage stageUI;
-
 
 
     public MapScreen(SeljakiMain game) {
@@ -120,8 +116,6 @@ public class MapScreen extends ScreenAdapter {
         stage.addActor(quitButton);
         stage.addActor(leaderboardButton);
 
-
-        touchPosition = new Vector3();
 
         try {
             //in most cases, geolocation won't be in the center of the tile because tile borders are predetermined (geolocation can be at the corner of a tile)
