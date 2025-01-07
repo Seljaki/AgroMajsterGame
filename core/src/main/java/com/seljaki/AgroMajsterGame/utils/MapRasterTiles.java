@@ -1,5 +1,6 @@
 package com.seljaki.AgroMajsterGame.utils;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -31,7 +32,7 @@ public class MapRasterTiles {
 
     //@2x in format means it returns higher DPI version of the image and the image size is 512px (otherwise it is 256px)
     final static public int TILE_SIZE = 512;
-
+    private static final String TILE_CACHE_DIR = "tile_cache";
     /**
      * Get raster tile based on zoom and tile number.
      *
@@ -42,8 +43,15 @@ public class MapRasterTiles {
      * @throws IOException
      */
     public static Texture getRasterTile(int zoom, int x, int y) throws IOException {
+        String fileName = zoom + "/" + x + "/" + y;
+        if(Gdx.files.local(TILE_CACHE_DIR + "/" + fileName).exists()){ // return texture
+            System.out.println("Tile is cached!");
+            byte[] tile = Gdx.files.local(TILE_CACHE_DIR + "/" + fileName).readBytes();
+            return getTexture(tile);
+        }
         URL url = new URL(mapServiceUrl + tilesetId + "/" + zoom + "/" + x + "/" + y + format + token);
         ByteArrayOutputStream bis = fetchTile(url);
+        Gdx.files.local(TILE_CACHE_DIR + "/" + fileName).writeBytes(bis.toByteArray(), false);
         return getTexture(bis.toByteArray());
     }
 
