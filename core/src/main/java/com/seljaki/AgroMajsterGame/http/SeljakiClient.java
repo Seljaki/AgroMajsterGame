@@ -46,12 +46,13 @@ public class SeljakiClient {
 
         Json json = new Json();
         String jsonGameData = file.readString();
+        System.out.println(jsonGameData);
         return json.fromJson(SeljakiClient.class, jsonGameData);
     }
 
     public void saveData() {
         FileHandle file = Gdx.files.local(FILENAME);
-
+        plots = null;
         Json json = new Json();
         String jsonGameData = json.toJson(this, SeljakiClient.class);
         file.writeString(jsonGameData, false);
