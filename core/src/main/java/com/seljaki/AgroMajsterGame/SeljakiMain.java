@@ -55,6 +55,7 @@ public class SeljakiMain extends Game {
         assetManager.load(AssetDescriptors.MOLE_SQUEAK_SOUND);
         assetManager.load(AssetDescriptors.WHACK_A_MOLE_MUSIC);
         assetManager.load(AssetDescriptors.PARTICLE_EFFECT_MOLE_BLOOD);
+        assetManager.load(AssetDescriptors.PARTICLE_EFFECT_RAIN);
         assetManager.finishLoading();
 
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);

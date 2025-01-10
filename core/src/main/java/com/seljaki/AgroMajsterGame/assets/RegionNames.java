@@ -3,6 +3,7 @@ package com.seljaki.AgroMajsterGame.assets;
 public class RegionNames {
 
     public static final String BG_DG = "duckMagpieGameBg";
+    public static final String CLOUD = "cloud";
     public static final String SCOPE = "scope";
     public static final String MAGPIE_SPRITE_LEFT_1 = "magpieSpriteLeft1";
     public static final String MAGPIE_SPRITE_LEFT_2 = "magpieSpriteLeft2";
