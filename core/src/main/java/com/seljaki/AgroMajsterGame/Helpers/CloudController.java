@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.seljaki.AgroMajsterGame.assets.RegionNames;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,23 +17,38 @@ public class CloudController {
         private TextureRegion texture;
         private float x, y;
         private float moveSpeedX, moveSpeedY;
+        private float scale;
         private boolean movingRight = true;
         private boolean movingUp = true;
 
-        public Cloud(TextureRegion texture, float x, float y, float moveSpeedX, float moveSpeedY) {
+        public Cloud(TextureRegion texture, float x, float y, float moveSpeedX, float moveSpeedY, float scale) {
             this.texture = texture;
             this.x = x;
             this.y = y;
             this.moveSpeedX = moveSpeedX;
             this.moveSpeedY = moveSpeedY;
+            this.scale = scale;
         }
 
         public void update(float delta, float screenWidth, float screenHeight, float verticalLimit) {
+            if (movingRight) {
+                x += moveSpeedX * delta * 100;
+                if (x >= screenWidth) {
+                    movingRight = false;
+                }
+            } else {
+                x -= moveSpeedX * delta * 100;
+                if (x <= 0) {
+                    movingRight = true;
+                    x = 0;
+                }
+            }
+
 
         }
 
         public void render(Batch batch) {
-            batch.draw(texture, x, y, texture.getRegionWidth()*0.4f, texture.getRegionWidth()*0.4f );
+            batch.draw(texture, x, y, texture.getRegionWidth() * scale, texture.getRegionHeight() * scale);
         }
     }
 
@@ -45,16 +61,18 @@ public class CloudController {
         this.screenWidth = camera.viewportWidth;
         this.screenHeight = camera.viewportHeight;
         this.verticalLimit = verticalLimit;
+        System.out.println("SCREEN WIDTH: " + screenWidth);  // Debug statement
 
-        TextureRegion cloudTexture = textureAtlas.findRegion("cloud");
+        TextureRegion cloudTexture = textureAtlas.findRegion(RegionNames.CLOUD);
 
         for (int i = 0; i < numberOfClouds; i++) {
-            float x = MathUtils.random(0, screenWidth - cloudTexture.getRegionWidth()*0.4f);
-            float y = MathUtils.random(screenHeight - cloudTexture.getRegionHeight()*0.4f / 2f +200 - verticalLimit, screenHeight - cloudTexture.getRegionHeight()*0.4f + verticalLimit +200);
-            float moveSpeedX = MathUtils.random(10, 30) / 100f;
-            float moveSpeedY = MathUtils.random(10, 30) / 100f;
+            float x = MathUtils.random(0, screenWidth);
+            float y = MathUtils.random(screenHeight - cloudTexture.getRegionHeight() / 2f + 200 - verticalLimit, screenHeight - cloudTexture.getRegionHeight() + verticalLimit + 200);
+            float moveSpeedX = MathUtils.random(0.1f, 0.3f);
+            float moveSpeedY = MathUtils.random(0.1f, 0.3f);
+            float scale = MathUtils.random(0.6f, 1.3f);
 
-            clouds.add(new Cloud(cloudTexture, x, y, moveSpeedX, moveSpeedY));
+            clouds.add(new Cloud(cloudTexture, x, y, moveSpeedX, moveSpeedY, scale));
         }
     }
 

@@ -389,7 +389,7 @@ public class MapScreen extends ScreenAdapter {
             game.getAssetManager().get(AssetDescriptors.GAMEPLAY),
             100,
             camera,
-            1
+            30
         );
     }
 }
