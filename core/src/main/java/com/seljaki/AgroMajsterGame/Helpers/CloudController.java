@@ -61,7 +61,6 @@ public class CloudController {
         this.screenWidth = camera.viewportWidth;
         this.screenHeight = camera.viewportHeight;
         this.verticalLimit = verticalLimit;
-        System.out.println("SCREEN WIDTH: " + screenWidth);  // Debug statement
 
         TextureRegion cloudTexture = textureAtlas.findRegion(RegionNames.CLOUD);
 
