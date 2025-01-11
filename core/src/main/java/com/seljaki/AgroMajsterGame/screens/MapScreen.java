@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayers;
@@ -24,18 +25,18 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.seljaki.AgroMajsterGame.Helpers.CloudController;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
+import com.seljaki.AgroMajsterGame.assets.AssetDescriptors;
 import com.seljaki.AgroMajsterGame.http.Plot;
-import com.seljaki.AgroMajsterGame.screens.WhackAMole.WhackAMoleScreen;
+import com.seljaki.AgroMajsterGame.http.Weather;
 import com.seljaki.AgroMajsterGame.utils.Constants;
 import com.seljaki.AgroMajsterGame.utils.Geolocation;
 import com.seljaki.AgroMajsterGame.utils.MapRasterTiles;
 import com.seljaki.AgroMajsterGame.utils.ZoomXY;
 
-import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 public class MapScreen extends ScreenAdapter {
@@ -55,14 +56,14 @@ public class MapScreen extends ScreenAdapter {
     private Skin skin;
     InputMultiplexer inputMultiplexer;
     private Vector2 cameraVelocity = new Vector2(0,0);
-
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
     private Viewport viewport;
-
-
+    private ParticleEffect weatherEffect;
+    private CloudController cloudController;
     public MapScreen(SeljakiMain game) {
         this.game = game;
     }
+    Weather weather;
 
     @Override
     public void show() {
@@ -72,6 +73,9 @@ public class MapScreen extends ScreenAdapter {
         skin = game.skin;
         //testSkin =  new Skin(Gdx.files.internal("ui/skin/flat-earth-ui.json"));
         plots = game.seljakiClient.getPlots();
+        //weather = Weather.CLOUDY;
+        weather = game.seljakiClient.getWeather();
+        System.out.println(weather);
 
         shapeRenderer = new ShapeRenderer();
 
@@ -199,6 +203,8 @@ public class MapScreen extends ScreenAdapter {
             }
         });
         Gdx.input.setInputProcessor(inputMultiplexer);
+
+        setWeather();
     }
 
     @Override
@@ -207,7 +213,6 @@ public class MapScreen extends ScreenAdapter {
         ScreenUtils.clear(0, 0, 0, 1);
 
         handleInput();
-
 
         camera.translate(cameraVelocity);
         cameraVelocity.x = MathUtils.lerp(cameraVelocity.x, 0, 0.05f); // Adjust 0.1f for smoothing factor
@@ -219,6 +224,7 @@ public class MapScreen extends ScreenAdapter {
 
         //drawMarkers();
         drawPlots();
+        drawWeather(delta);
 
         stage.draw();
         stage.act(delta);
@@ -250,6 +256,24 @@ public class MapScreen extends ScreenAdapter {
         return polygons.toArray(new Polygon[0]);
     }
 
+    private void drawWeather(float delta) {
+        if(weather == Weather.CLOUDY) {
+            game.batch.begin();
+            cloudController.update(delta);
+            cloudController.render(game.batch);
+            game.batch.end();
+        } else if(weather == Weather.RAINY) {
+            float cameraX = camera.position.x;
+            float cameraY = camera.position.y;
+
+            weatherEffect.setPosition(0 - cameraX, viewport.getScreenHeight() * 2 - cameraY);
+            game.batch.begin();
+            weatherEffect.update(delta);
+            weatherEffect.draw(game.batch);
+            game.batch.end();
+        }
+    }
+
     @Override
     public void hide() {
         super.hide();
@@ -259,6 +283,7 @@ public class MapScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        super.dispose();
         shapeRenderer.dispose();
         stage.dispose();
         tiledMap.dispose();
@@ -361,5 +386,19 @@ public class MapScreen extends ScreenAdapter {
         super.resize(width, height);
 
         viewport.update(width, height);
+    }
+
+    private void setWeather() {
+        if(weather == Weather.RAINY) {
+            weatherEffect = game.getAssetManager().get(AssetDescriptors.PARTICLE_EFFECT_RAIN);
+            weatherEffect.setPosition(0, viewport.getScreenHeight());
+        } else if (weather == Weather.CLOUDY) {
+            cloudController = new CloudController(
+                game.getAssetManager().get(AssetDescriptors.GAMEPLAY),
+                100,
+                camera,
+                30
+            );
+        }
     }
 }
