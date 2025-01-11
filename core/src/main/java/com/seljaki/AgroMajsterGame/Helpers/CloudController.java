@@ -10,15 +10,16 @@ import com.seljaki.AgroMajsterGame.assets.RegionNames;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class CloudController {
 
-    private static class Cloud {
+    private class Cloud {
         private TextureRegion texture;
         private float x, y;
         private float moveSpeedX, moveSpeedY;
         private float scale;
-        private boolean movingRight = true;
+        private boolean movingRight = MathUtils.random(0, 10) % 2 == 0;
         private boolean movingUp = true;
 
         public Cloud(TextureRegion texture, float x, float y, float moveSpeedX, float moveSpeedY, float scale) {
@@ -32,19 +33,17 @@ public class CloudController {
 
         public void update(float delta, float screenWidth, float screenHeight, float verticalLimit) {
             if (movingRight) {
-                x += moveSpeedX * delta * 100;
+                x += moveSpeedX * delta * 25;
                 if (x >= screenWidth) {
                     movingRight = false;
                 }
             } else {
-                x -= moveSpeedX * delta * 100;
+                x -= moveSpeedX * delta * 25;
                 if (x <= 0) {
                     movingRight = true;
                     x = 0;
                 }
             }
-
-
         }
 
         public void render(Batch batch) {

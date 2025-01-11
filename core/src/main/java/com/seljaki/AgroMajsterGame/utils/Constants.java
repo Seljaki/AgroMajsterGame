@@ -10,4 +10,5 @@ public class Constants {
     public static final int HUD_WIDTH = Gdx.graphics.getWidth();
     public static final int HUD_HEIGHT = Gdx.graphics.getHeight();
     public static final String SELJAKI_SERVER_URL = "https://seljaki-server.schnapsen66.eu";
+    public static final String SELJAKI_CHAIN_URL = "http://192.168.50.154:3336";
 }

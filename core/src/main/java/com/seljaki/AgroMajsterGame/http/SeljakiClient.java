@@ -3,10 +3,7 @@ package com.seljaki.AgroMajsterGame.http;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.seljaki.AgroMajsterGame.utils.Geolocation;
 import okhttp3.*;
 import org.jetbrains.annotations.Nullable;
@@ -14,12 +11,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.seljaki.AgroMajsterGame.utils.Constants.SELJAKI_CHAIN_URL;
 import static com.seljaki.AgroMajsterGame.utils.Constants.SELJAKI_SERVER_URL;
 
 public class SeljakiClient {
     private static final String FILENAME = "userdata.json";
     LoginInfo loginInfo = null;
     Plot[] plots = null;
+    Weather weather = null;
+
+    public SeljakiClient(){}
+    public SeljakiClient(LoginInfo loginInfo) {
+        this.loginInfo = loginInfo;
+    }
+
     public boolean isLoggedIn() {
         return loginInfo != null;
     }
@@ -45,17 +50,16 @@ public class SeljakiClient {
             return new SeljakiClient();
 
         Json json = new Json();
-        String jsonGameData = file.readString();
-        System.out.println(jsonGameData);
-        return json.fromJson(SeljakiClient.class, jsonGameData);
+        String jsonLoginInfo = file.readString();
+
+        return new SeljakiClient(json.fromJson(LoginInfo.class, jsonLoginInfo));
     }
 
     public void saveData() {
         FileHandle file = Gdx.files.local(FILENAME);
-        plots = null;
         Json json = new Json();
-        String jsonGameData = json.toJson(this, SeljakiClient.class);
-        file.writeString(jsonGameData, false);
+        String jsonLoginInfo = json.toJson(loginInfo, LoginInfo.class);
+        file.writeString(jsonLoginInfo, false);
     }
 
     public void logOut() {
@@ -63,6 +67,54 @@ public class SeljakiClient {
         FileHandle file = Gdx.files.local(FILENAME);
         if(file.exists())
             file.delete();
+    }
+
+    @Nullable
+    public Weather getWeather() {
+        if(weather != null)
+            return weather;
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+            .url(SELJAKI_CHAIN_URL + "/blockchain/lastBlock")
+            .get()
+            .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                Gson gson = new Gson();
+                // Parse the JSON response
+                String responseBody = response.body().string();
+
+                JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
+
+                // Navigate to the prediction object
+                JsonObject prediction = jsonObject
+                    .getAsJsonObject("data")
+                    .getAsJsonObject("prediction");
+
+                int clear = prediction.get("clear").getAsInt();
+                int cloudy = prediction.get("cloudy").getAsInt();
+                int rainy = prediction.get("rainy").getAsInt();
+
+                // Determine the highest value and return the corresponding enum
+                if (clear >= cloudy && clear >= rainy)
+                    weather = Weather.CLEAR;
+                else if (cloudy >= clear && cloudy >= rainy)
+                    weather = Weather.CLOUDY;
+                else
+                    weather = Weather.RAINY;
+                return weather;
+            } else {
+                //System.err.println("Login failed: " + response.code() + " - " + response.message());
+                return null;
+            }
+        } catch (Exception e) {
+            // Handle exceptions such as network issues
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public boolean logIn(String username, String password) {
