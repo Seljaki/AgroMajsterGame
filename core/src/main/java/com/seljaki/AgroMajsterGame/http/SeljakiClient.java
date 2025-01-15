@@ -94,9 +94,9 @@ public class SeljakiClient {
                     .getAsJsonObject("data")
                     .getAsJsonObject("prediction");
 
-                int clear = prediction.get("clear").getAsInt();
-                int cloudy = prediction.get("cloudy").getAsInt();
-                int rainy = prediction.get("rainy").getAsInt();
+                float clear = prediction.get("clear").getAsFloat();
+                float cloudy = prediction.get("cloudy").getAsFloat();
+                float rainy = prediction.get("rainy").getAsFloat();
 
                 // Determine the highest value and return the corresponding enum
                 if (clear >= cloudy && clear >= rainy)
