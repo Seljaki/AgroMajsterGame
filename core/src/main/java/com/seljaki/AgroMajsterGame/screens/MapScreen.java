@@ -55,14 +55,17 @@ public class MapScreen extends ScreenAdapter {
     private Stage stage;
     private Skin skin;
     InputMultiplexer inputMultiplexer;
-    private Vector2 cameraVelocity = new Vector2(0,0);
+    private Vector2 cameraVelocity = new Vector2(0, 0);
     private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.4129955, 16.06006619);
     private Viewport viewport;
     private ParticleEffect weatherEffect;
     private CloudController cloudController;
+    private Window plotWindow;
+
     public MapScreen(SeljakiMain game) {
         this.game = game;
     }
+
     Weather weather;
 
     @Override
@@ -89,7 +92,7 @@ public class MapScreen extends ScreenAdapter {
 
 
         TextButton leaderboardButton = new TextButton("Leaderboard", skin);
-        leaderboardButton.setPosition(stage.getWidth()-leaderboardButton.getWidth()-20, stage.getHeight()-leaderboardButton.getHeight()-20);
+        leaderboardButton.setPosition(stage.getWidth() - leaderboardButton.getWidth() - 20, stage.getHeight() - leaderboardButton.getHeight() - 20);
         leaderboardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -99,7 +102,7 @@ public class MapScreen extends ScreenAdapter {
         });
 
         TextButton logOutButton = new TextButton("Log Out", skin);
-        logOutButton.setPosition(stage.getWidth()-logOutButton.getWidth()-20, leaderboardButton.getY()-logOutButton.getHeight()-20);
+        logOutButton.setPosition(stage.getWidth() - logOutButton.getWidth() - 20, leaderboardButton.getY() - logOutButton.getHeight() - 20);
         logOutButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -109,7 +112,7 @@ public class MapScreen extends ScreenAdapter {
         });
 
         TextButton quitButton = new TextButton("Quit", skin);
-        quitButton.setPosition(logOutButton.getX()-quitButton.getWidth()-20, leaderboardButton.getY()-quitButton.getHeight()-20);
+        quitButton.setPosition(logOutButton.getX() - quitButton.getWidth() - 20, leaderboardButton.getY() - quitButton.getHeight() - 20);
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -152,14 +155,16 @@ public class MapScreen extends ScreenAdapter {
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
-        inputMultiplexer.addProcessor(new InputAdapter(){
+        inputMultiplexer.addProcessor(new InputAdapter() {
             float deltaX;
             float deltaY;
+
             @Override
             public boolean scrolled(float amountX, float amountY) {
                 camera.zoom += amountY * Gdx.graphics.getDeltaTime() * 10f;
                 return true;
             }
+
             private float lastX, lastY;
             private boolean posSet = false;
 
@@ -173,7 +178,7 @@ public class MapScreen extends ScreenAdapter {
 
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                if(posSet) {
+                if (posSet) {
                     deltaX = (lastX - screenX) * camera.zoom * (camera.viewportWidth / Gdx.graphics.getWidth());
                     deltaY = -(lastY - screenY) * camera.zoom * (camera.viewportHeight / Gdx.graphics.getHeight());
 
@@ -236,7 +241,7 @@ public class MapScreen extends ScreenAdapter {
         //shapeRenderer.setColor(Color.RED);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (Plot p : plots) {
-            if(p == selectedPlot)
+            if (p == selectedPlot)
                 shapeRenderer.setColor(Color.GREEN);
             else
                 shapeRenderer.setColor(Color.RED);
@@ -257,12 +262,12 @@ public class MapScreen extends ScreenAdapter {
     }
 
     private void drawWeather(float delta) {
-        if(weather == Weather.CLOUDY) {
+        if (weather == Weather.CLOUDY) {
             game.batch.begin();
             cloudController.update(delta);
             cloudController.render(game.batch);
             game.batch.end();
-        } else if(weather == Weather.RAINY) {
+        } else if (weather == Weather.RAINY) {
             float cameraX = camera.position.x;
             float cameraY = camera.position.y;
 
@@ -287,7 +292,7 @@ public class MapScreen extends ScreenAdapter {
         shapeRenderer.dispose();
         stage.dispose();
         tiledMap.dispose();
-        for(Texture mapTile : mapTiles)
+        for (Texture mapTile : mapTiles)
             mapTile.dispose();
     }
 
@@ -310,11 +315,11 @@ public class MapScreen extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             camera.translate(0, 3, 0);
         }
-        if(Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched()) {
             Vector3 point = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             //System.out.println(Gdx.input.getX() +" "+ Gdx.input.getY());
             for (int i = 0; i < plotsBounds.length; i++) {
-                if(plotsBounds[i].contains(point.x, point.y)) {
+                if (plotsBounds[i].contains(point.x, point.y)) {
                     System.out.println("CONTAINS " + i);
                     onPlotClicked(plots[i]);
                     break;
@@ -334,7 +339,11 @@ public class MapScreen extends ScreenAdapter {
     void onPlotClicked(Plot plot) {
         selectedPlot = plot;
         //stage.clear();
-        stage.addActor(createPlotInfoWindow(plot));
+        if (plotWindow != null) {
+            plotWindow.remove();
+        }
+        plotWindow = createPlotInfoWindow(plot);
+        stage.addActor(plotWindow);
     }
 
     private Window createPlotInfoWindow(Plot plot) {
@@ -381,6 +390,7 @@ public class MapScreen extends ScreenAdapter {
 
         return dialog;
     }
+
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
@@ -389,7 +399,7 @@ public class MapScreen extends ScreenAdapter {
     }
 
     private void setWeather() {
-        if(weather == Weather.RAINY) {
+        if (weather == Weather.RAINY) {
             weatherEffect = game.getAssetManager().get(AssetDescriptors.PARTICLE_EFFECT_RAIN);
             weatherEffect.setPosition(0, viewport.getScreenHeight());
         } else if (weather == Weather.CLOUDY) {

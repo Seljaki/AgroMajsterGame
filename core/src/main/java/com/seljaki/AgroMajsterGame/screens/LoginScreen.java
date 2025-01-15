@@ -64,9 +64,12 @@ public class LoginScreen extends ScreenAdapter {
         passwordInput.setPasswordMode(true);
         passwordInput.setPasswordCharacter('*');
 
-        Label errorLabel = new Label("The username or password is inccorect", skin);
-        errorLabel.setColor(Color.RED);
+        Label.LabelStyle errorStyle = new Label.LabelStyle();
+        errorStyle.font = skin.getFont("font");
+        errorStyle.fontColor = Color.SALMON;
+        Label errorLabel = new Label("The username or password is inccorect", errorStyle);
         errorLabel.setVisible(false);
+
 
         TextButton backButton = new TextButton("Exit", skin);
         backButton.addListener(new ClickListener() {
