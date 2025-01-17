@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.seljaki.AgroMajsterGame.*;
 import com.seljaki.AgroMajsterGame.Helpers.AnimatedActor;
@@ -183,6 +184,7 @@ public class MiniGameSettingsScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        ScreenUtils.clear(0, 0, 0, 1);
         stage.act(delta);
         //stage.setDebugAll(true);
         stage.draw();

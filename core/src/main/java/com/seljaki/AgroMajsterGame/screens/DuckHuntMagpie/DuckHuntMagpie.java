@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.seljaki.AgroMajsterGame.GameManager;
 import com.seljaki.AgroMajsterGame.Helpers.MagpieBird;
@@ -151,9 +152,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
         float screenWidth = viewport.getWorldWidth();
         float screenHeight = viewport.getWorldHeight();
         //System.out.println(screenWidth + " : " + screenHeight);
-        Gdx.gl.glClearColor(0, 0.6f, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        ScreenUtils.clear(0, 0, 0, 1);
         batch.setProjectionMatrix(viewport.getCamera().combined);
         shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 

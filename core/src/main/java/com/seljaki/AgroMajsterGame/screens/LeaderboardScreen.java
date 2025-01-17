@@ -2,6 +2,7 @@ package com.seljaki.AgroMajsterGame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.seljaki.AgroMajsterGame.GameManager;
 import com.seljaki.AgroMajsterGame.SeljakiMain;
@@ -43,6 +45,7 @@ public class LeaderboardScreen extends ScreenAdapter {
         stage = new Stage(game.viewport);
         Gdx.input.setInputProcessor(stage);
 
+        Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
         background = new Image(bgMagpie);
         background.setSize(stage.getWidth(), stage.getHeight());
         background.setPosition(0, 0);
@@ -138,6 +141,7 @@ public class LeaderboardScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        ScreenUtils.clear(0, 0, 0, 1);
         stage.act(delta);
         stage.draw();
     }
