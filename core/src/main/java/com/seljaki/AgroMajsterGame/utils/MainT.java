@@ -11,7 +11,7 @@ import java.net.URL;
 public class MainT {
 
     static String mapServiceUrl = "https://maps.geoapify.com/v1/tile/";
-    static String token = "?&apiKey=" + Keys.GEOAPIFY;
+    static String token = "?&apiKey=" + Keys.INSTANCE.getGEOAPIFY();
     static String tilesetId = "dark-matter-purple-roads";
     static String format = "@2x.png";
 

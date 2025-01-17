@@ -19,7 +19,7 @@ public class MapRasterTiles {
     //Mapbox
     //https://docs.mapbox.com/api/maps/raster-tiles/
     static String mapServiceUrl = "https://api.mapbox.com/v4/";
-    static String token = "?access_token=" + Keys.MAPBOX;
+    static String token = "?access_token=" + Keys.INSTANCE.getMAPBOX();
     static String tilesetId = "mapbox.satellite";
     static String format = "@2x.jpg90";
 
@@ -256,7 +256,7 @@ public class MapRasterTiles {
 
         // Construct the URL
         String urlString = "https://api.geoapify.com/v1/routing?waypoints=" + coordinatesPath.toString() +
-                "&mode=" + "drive" + "&apiKey=" + Keys.GEOAPIFY;
+                "&mode=" + "drive" + "&apiKey=" + Keys.INSTANCE.getGEOAPIFY();
 
         // Open connection
         URL url = new URL(urlString);
