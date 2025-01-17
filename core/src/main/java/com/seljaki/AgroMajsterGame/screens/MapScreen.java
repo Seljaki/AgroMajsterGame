@@ -74,6 +74,8 @@ public class MapScreen extends ScreenAdapter {
         skin = game.skin;
         //testSkin =  new Skin(Gdx.files.internal("ui/skin/flat-earth-ui.json"));
         plots = game.seljakiClient.getPlots();
+        Plot p = plots[0];
+        //p.note = "changed from libgdx!";
         //weather = Weather.CLOUDY;
         weather = game.seljakiClient.getWeather();
         System.out.println(weather);

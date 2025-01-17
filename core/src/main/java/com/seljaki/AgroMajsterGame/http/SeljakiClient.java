@@ -8,6 +8,7 @@ import com.seljaki.AgroMajsterGame.utils.Geolocation;
 import okhttp3.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,6 +148,33 @@ public class SeljakiClient {
             }
         } catch (Exception e) {
             // Handle exceptions such as network issues
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updatePlot(Plot plot) { // ne posodobi vsega !!!
+        if(loginInfo == null) return false;
+
+        OkHttpClient client = new OkHttpClient();
+
+        String json = "{"
+            + "\"title\": \"" + plot.title + "\","
+            + "\"note\": \"" + plot.note + "\","
+            + "\"archived\": " + plot.archived
+            + "}";
+
+        RequestBody body = RequestBody.create(json, MediaType.get("application/json"));
+
+        Request request = new Request.Builder()
+            .put(body)
+            .addHeader("x-auth-token", loginInfo.token)
+            .url(SELJAKI_SERVER_URL+ "/plots/" + plot.id)
+            .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return response.isSuccessful();
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
