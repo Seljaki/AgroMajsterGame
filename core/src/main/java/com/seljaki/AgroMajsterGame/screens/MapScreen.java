@@ -1,9 +1,7 @@
 package com.seljaki.AgroMajsterGame.screens;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -228,7 +226,11 @@ public class MapScreen extends ScreenAdapter {
         tiledMapRenderer.render();
 
         //drawMarkers();
-        drawPlots();
+        drawPlots(true,
+            new Color(1f ,1f ,1f ,0.7f),
+            new Color(1f ,1f ,1f ,0.4f)
+        );
+        drawPlots(false, Color.GREEN, Color.RED);
         drawWeather(delta);
 
         stage.draw();
@@ -236,19 +238,39 @@ public class MapScreen extends ScreenAdapter {
         //stageUI.draw();
     }
 
-    private void drawPlots() {
+    private void drawPlots(boolean filled, Color selected, Color unselected) {
+        Gdx.gl.glEnable(GL30.GL_BLEND);
+        Gdx.gl20.glLineWidth(4f / camera.zoom); // line width
         shapeRenderer.setProjectionMatrix(camera.combined);
-        //shapeRenderer.setColor(Color.RED);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        if(filled)
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        else
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (Plot p : plots) {
             if (p == selectedPlot)
-                shapeRenderer.setColor(Color.GREEN);
+                shapeRenderer.setColor(selected);
             else
-                shapeRenderer.setColor(Color.RED);
-            Geolocation[] loc = p.coordinates;
-            shapeRenderer.polygon(Geolocation.getPolygon(loc, beginTile));
+                shapeRenderer.setColor(unselected);
+
+            float[] loc = Geolocation.getPolygon(p.coordinates, beginTile);
+            if (filled)
+            {
+                if (loc.length >= 6) {
+                    for (int i = 2; i < loc.length - 2; i += 2) {
+                        shapeRenderer.triangle(
+                            loc[0], loc[1],       // (x0, y0)
+                            loc[i], loc[i + 1],   // (xi, yi)
+                            loc[i + 2], loc[i + 3] //(xi+1, yi+1)
+                        );
+                    }
+                }
+            }
+            else {
+                shapeRenderer.polygon(loc);
+            }
         }
         shapeRenderer.end();
+        Gdx.gl.glDisable(GL30.GL_BLEND);
     }
 
     private Polygon[] getPlotsBounds() {
