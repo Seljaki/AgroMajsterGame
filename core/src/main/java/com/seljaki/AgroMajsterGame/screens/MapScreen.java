@@ -379,7 +379,21 @@ public class MapScreen extends ScreenAdapter {
 
         dialog.row();
         dialog.add(new Label("Title: " + plot.title, skin)).left().pad(5).row();
-        dialog.add(new Label("Note: " + plot.note, skin)).left().pad(5).row();
+
+        Label noteLabel = new Label(plot.note, skin);
+        noteLabel.setWrap(true);
+        noteLabel.setAlignment(Align.topLeft);
+
+        ScrollPane scrollPane = new ScrollPane(noteLabel, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.layout();
+
+        Table noteTable = new Table();
+        noteTable.add(new Label("Note: ", skin)).top().pad(5);
+        noteTable.add(scrollPane).width(250).height(100).pad(5).row();
+
+        dialog.add(noteTable).row();
         dialog.add(new Label("Plot Number: " + plot.plotNumber, skin)).left().pad(5).row();
         dialog.add(new Label("Cadastral Municipality: " + plot.cadastralMunicipality, skin)).left().pad(5).row();
         dialog.add(new Label("Archived: " + (plot.archived ? "Yes" : "No"), skin)).left().pad(5).row();
@@ -465,8 +479,14 @@ public class MapScreen extends ScreenAdapter {
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                plot.title = titleField.getText();
+                plot.note = noteArea.getText();
+                plot.archived = archivedCheckBox.isChecked();
+
+                game.seljakiClient.updatePlot(plot);
                 dialog.remove();
                 isDialogOpen = false;
+                onPlotClicked(plot);
             }
         });
 
