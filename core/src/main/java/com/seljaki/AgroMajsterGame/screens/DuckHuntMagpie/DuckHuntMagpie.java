@@ -95,7 +95,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
 
         switch (difficulty) {
             case "Medium":
-                multiplier =1.5f;
+                multiplier =2f;
                 magpieScale = 0.22f;
                 maxBirdsAtOnce = 20;
                 birdBaseSpeed = 200f;
@@ -104,7 +104,7 @@ public class DuckHuntMagpie extends ScreenAdapter {
                 ammo = 8;
                 break;
             case "Hard":
-                multiplier = 1.75f;
+                multiplier = 3f;
                 magpieScale = 0.18f;
                 maxBirdsAtOnce = 30;
                 birdBaseSpeed = 250f;

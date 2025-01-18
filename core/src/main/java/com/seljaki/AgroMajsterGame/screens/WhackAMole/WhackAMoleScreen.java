@@ -41,7 +41,7 @@ public class WhackAMoleScreen extends ScreenAdapter {
     private Image timerBar;
     private float timeRemaining;
     private float totalTime;
-    private int moleWaitTime;
+    private float moleWaitTime;
     TextureRegion mole1Texture;
     TextureRegion mole2Texture;
     private final TextureAtlas gameplayAtlas;
@@ -76,19 +76,19 @@ public class WhackAMoleScreen extends ScreenAdapter {
 
         switch (difficulty) {
             case "Hard":
-                multiplier = 1.75f;
+                multiplier = 3f;
                 totalTime = 15f;
-                moleWaitTime = 1;
+                moleWaitTime = 1f;
                 break;
             case "Medium":
-                multiplier =1.5f;
-                totalTime = 30f;
-                moleWaitTime = 2;
+                multiplier = 2f;
+                totalTime = 25f;
+                moleWaitTime = 2f;
                 break;
             default:
-                multiplier =1f;
-                totalTime = 45f;
-                moleWaitTime = 3;
+                multiplier = 1f;
+                totalTime = 30f;
+                moleWaitTime = 2.5f;
         }
 
         this.timeRemaining = totalTime;
