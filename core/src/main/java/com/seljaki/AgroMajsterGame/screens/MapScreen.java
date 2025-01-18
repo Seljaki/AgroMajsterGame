@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -59,6 +60,7 @@ public class MapScreen extends ScreenAdapter {
     private ParticleEffect weatherEffect;
     private CloudController cloudController;
     private Window plotWindow;
+    private Boolean isDialogOpen = false;
 
     public MapScreen(SeljakiMain game) {
         this.game = game;
@@ -322,6 +324,7 @@ public class MapScreen extends ScreenAdapter {
     }
 
     private void handleInput() {
+        if(isDialogOpen) return;
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             camera.zoom += 0.02;
         }
@@ -383,6 +386,7 @@ public class MapScreen extends ScreenAdapter {
 
         TextButton closeButton = new TextButton("Close", skin);
         TextButton playGameButton = new TextButton("Play Game", skin);
+        TextButton editButton = new TextButton("Edit", skin);
 
         closeButton.addListener(new ClickListener() {
             @Override
@@ -401,10 +405,17 @@ public class MapScreen extends ScreenAdapter {
 
             }
         });
+        editButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                createPlotEditWindow(dialog.getX()+dialog.getWidth()+20,dialog.getY(),plot);
+            }
+        });
 
         Table buttonTable = new Table();
         buttonTable.add(closeButton).pad(10);
         buttonTable.add(playGameButton).pad(10);
+        buttonTable.add(editButton).pad(10);
         dialog.add(buttonTable).row();
 
         dialog.pack();
@@ -414,6 +425,63 @@ public class MapScreen extends ScreenAdapter {
         dialog.setPosition(20, viewport.getWorldHeight() - dialog.getHeight() - 20);
 
         return dialog;
+    }
+
+    public void createPlotEditWindow(float x, float y,Plot plot){
+
+        isDialogOpen = true;
+
+        Dialog dialog = new Dialog("Edit Plot", skin);
+
+        TextField titleField = new TextField(plot.title, skin);
+
+        TextArea noteArea = new TextArea(plot.note, skin);
+        noteArea.setPrefRows(4);
+        noteArea.setAlignment(Align.topLeft);
+
+        CheckBox archivedCheckBox = new CheckBox("", skin);
+        archivedCheckBox.setChecked(plot.archived);
+
+        dialog.row();
+        dialog.add(new Label("Title: ", skin)).right().pad(5);
+        dialog.add(titleField).width(200).pad(5).row();
+
+        dialog.add(new Label("Note: ", skin)).right().top().pad(5);
+        dialog.add(noteArea).width(200).height(100).pad(5).row();
+
+        dialog.add(new Label("Archived: ", skin)).right().pad(5);
+        dialog.add(archivedCheckBox).pad(5).left().row();
+        TextButton cancelButton = new TextButton("Cancel", skin);
+        TextButton saveButton = new TextButton("Save", skin);
+
+        cancelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dialog.remove();
+                isDialogOpen = false;
+            }
+        });
+
+        saveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dialog.remove();
+                isDialogOpen = false;
+            }
+        });
+
+        Table buttonTable = new Table();
+        buttonTable.add(cancelButton).pad(10);
+        buttonTable.add(saveButton).pad(10);
+        dialog.add(buttonTable).colspan(2).row();
+
+        dialog.pack();
+        dialog.setMovable(true);
+        dialog.setModal(true);
+        dialog.setResizable(false);
+        dialog.setPosition(x, y);
+
+        stage.addActor(dialog);
     }
 
     @Override
