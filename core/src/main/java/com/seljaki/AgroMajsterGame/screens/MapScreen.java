@@ -228,11 +228,12 @@ public class MapScreen extends ScreenAdapter {
         tiledMapRenderer.render();
 
         //drawMarkers();
-        drawPlots(true,
-            new Color(1f ,1f ,1f ,0.7f),
-            new Color(1f ,1f ,1f ,0.4f)
-        );
-        drawPlots(false, Color.GREEN, Color.RED);
+        Color selectedColor = Color.valueOf("00c3ff");
+        selectedColor.a=0.2f;
+        Color generalColor = Color.valueOf("ff8b00");
+        generalColor.a=0.2f;
+        drawPlots(true, selectedColor, generalColor);
+        drawPlots(false,Color.valueOf("00c3ff"), Color.valueOf("ff8b00"));
         drawWeather(delta);
 
         stage.draw();
